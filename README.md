@@ -3,5 +3,5 @@
 
 ## Authors:
 Miha Mulej
-Eirik
+Eirik Solheim Ølberg
 

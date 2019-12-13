@@ -1,7 +1,7 @@
 <head>
     <% include partials/head %>
 </head>
-<div id="form">
+<div id="form" class="text-center">
     <p>Please login to your account</p>
     <hr />
     <form action="/login" method="post">
@@ -13,10 +13,10 @@
             <label for="form_password">Password</label>
             <input id="form_password" type="password" name="password" />
         </div>
-        <button class="btn btn-primary btn-block" type="submit" value="Submit">Connect</button>
+        <button class="btn btn-primary" class="text-center" type="submit" value="Submit">Connect</button>
     </form>
     <hr />
-    <button class="btn btn-success btn-block" type="submit" href="/signup" onClick='document.location.href="/signup"'>
+    <button class="btn btn-success" class="text-center" type="submit" href="/signup" onClick='document.location.href="/signup"'>
         Create an account
     </button>
 </div>

@@ -1,7 +1,7 @@
 <head>
     <% include partials/head %>
 </head>
-<div id="form">
+<div id="form" class="text-center">
     <p>Please input your new user</p>
     <hr />
     <form action="/signup" method="post">
@@ -17,7 +17,9 @@
             <label for="form_email">email</label>
             <input id="form_email" type="email" name="email" />
         </div>
-        <button class="btn btn-primary btn-block" type="submit" value="Submit">Submit</button>
+        <button class="btn btn-primary btn-block" class="text-center" type="submit" value="Submit">
+            Submit
+        </button>
     </form>
     <hr />
 </div>

@@ -1,29 +1,68 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html>
 <head>
-    <title></title>
-    <!-- Ignite UI Required Combined CSS Files -->
-    <link href="http://cdn-na.infragistics.com/igniteui/2019.2/latest/css/themes/infragistics/infragistics.theme.css" rel="stylesheet" />
-    <link href="http://cdn-na.infragistics.com/igniteui/2019.2/latest/css/structure/infragistics.css" rel="stylesheet" />
+    <% include partials/head %>
 
-    <script src="http://ajax.aspnetcdn.com/ajax/modernizr/modernizr-2.8.3.js"></script>
-    <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
-    <script src="http://code.jquery.com/ui/1.11.1/jquery-ui.min.js"></script>
+    <h1 className="h1">Hello user</h1>
 
-    <!-- Ignite UI Required Combined JavaScript Files -->
-    <script src="http://cdn-na.infragistics.com/igniteui/2019.2/latest/js/infragistics.core.js"></script>
-    <script src="http://cdn-na.infragistics.com/igniteui/2019.2/latest/js/infragistics.dv.js"></script>
+<script type="text/javascript">
+window.onload = function () {
+    var chart = new CanvasJS.Chart("chartContainer",
+    {
+      title:{
+        text: "Simple Date-Time Chart"
+    },
+    axisX:{
+        title: "timeline",
+        gridThickness: 2
+    },
+    axisY: {
+        title: "Downloads"
+    },
+    data: [
+    {        
+        type: "area",
+        dataPoints: [//array
+        { x: new Date(2012, 01, 1), y: 26},
+        { x: new Date(2012, 01, 3), y: 38},
+        { x: new Date(2012, 01, 5), y: 43},
+        { x: new Date(2012, 01, 7), y: 29},
+        { x: new Date(2012, 01, 11), y: 41},
+        { x: new Date(2012, 01, 13), y: 54},
+        { x: new Date(2012, 01, 20), y: 66},
+        { x: new Date(2012, 01, 21), y: 60},
+        { x: new Date(2012, 01, 25), y: 53},
+        { x: new Date(2012, 01, 27), y: 60}
+
+        ]
+    }
+    ]
+});
+
+    chart.render();
+}
+</script>
+<script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 </head>
 <body>
-    <div id="data-chart"></div>
+<div id="chartContainer" style="height: 300px; width: 100%;">
+</div>
 
-    <div class="USCensus-attribution">
-        Population data from:<br>
-        <a href="http://www.census.gov/" target="_blank">U.S. Census Bureau</a>
-    </div>
+<div class="text-center">
+    <button class="btn btn-secondary" type="submit">
+        Insert metrics
+    </button>
+    <button class="btn btn-secondary" type="submit">
+        Update metrics
+    </button>
+    <button class="btn btn-secondary" type="submit">
+        Delete metrics
+    </button>
+    <button class="btn btn-danger" type="submit" href="/login" onClick='document.location.href="/login"'>
+        Log out
+    </button>
+</div>
 
-    <script src="https://www.igniteui.com/TypeScriptSamples/data-chart/typescript.js"></script>
+
 </body>
 </html>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>

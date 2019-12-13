@@ -125,7 +125,7 @@ app.post('/login', (req: any, res: any, next: any) => {
         } else {
             req.session.loggedIn = true
             req.session.user = result
-            res.redirect('/chart')
+            res.redirect('/index')
         }
     })
 })
