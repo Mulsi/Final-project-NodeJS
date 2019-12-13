@@ -1,6 +1,7 @@
-#Final project for Web technologies - NodeJS
+# Final project for Web technologies - NodeJS
 
 
-##Authors:
+## Authors:
 Miha Mulej
 Eirik
+
