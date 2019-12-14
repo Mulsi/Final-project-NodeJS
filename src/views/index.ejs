@@ -33,7 +33,6 @@ window.onload = function () {
         { x: new Date(2012, 01, 21), y: 60},
         { x: new Date(2012, 01, 25), y: 53},
         { x: new Date(2012, 01, 27), y: 60}
-
         ]
     }
     ]
@@ -77,8 +76,10 @@ window.onload = function () {
         return 'timestamp: '+d.timestamp+', value: '+d.value+'';
         })
         $('#metrics').append(content.join("\n"));
+        console.log(content)
     });
     })
+    
   </script>
 
 

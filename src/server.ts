@@ -28,7 +28,7 @@ app.use(session({
 app.use('/user', userRouter)
 app.use(express.static(path.join(__dirname, '/public')))
 app.use(bodyparser.json())
-app.use(bodyparser.urlencoded())
+app.use(bodyparser.urlencoded({extended: true}))
 app.set('views', __dirname + "/views")
 app.set('view engine', 'ejs');
 
