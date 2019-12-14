@@ -49,9 +49,10 @@ window.onload = function () {
 </div>
 
 <div class="text-center">
-    <button class="btn btn-secondary" type="submit">
-        Insert metrics
+    <button class="btn btn-secondary" type="submit" id="show-metrics">
+        Get metrics
     </button>
+    <div id="metrics"></div>
     <button class="btn btn-secondary" type="submit">
         Update metrics
     </button>
@@ -64,5 +65,21 @@ window.onload = function () {
 </div>
 
 
+
 </body>
 </html>
+
+<script>
+    $('#show-metrics').click((e) => {
+    e.preventDefault();
+    $.getJSON("/metrics", {}, (data) => {
+        const content = data.map(d => {
+        return 'timestamp: '+d.timestamp+', value: '+d.value+'';
+        })
+        $('#metrics').append(content.join("\n"));
+    });
+    })
+  </script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
