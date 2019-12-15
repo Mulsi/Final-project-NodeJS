@@ -34,10 +34,10 @@ app.set('view engine', 'ejs');
 
 /* Metrics */
 
-app.get('/', (req: any, res: any) => {
-  res.write('Hello world')
-  res.end()
-})
+// app.get('/', (req: any, res: any) => {
+//   res.write('Hello world')
+//   res.end()
+// })
 
 
 app.get(
@@ -90,6 +90,14 @@ app.post('/metrics/:id', (req: any, res: any) => {
     })
 })
 
+app.post('/metrics', (req: any, res: any) => {
+    dbMet.save(req.session.user.username, req.body, (err: Error | null) => {
+        if (err) throw err
+        res.status(200).send(req.params.id)
+        //res.status(200).send("Generic message for testing")
+    })
+})
+
 /* User authentication and creation */
 app.use(authRouter)
 
@@ -106,17 +114,16 @@ authRouter.get('/signup', (req: any, res: any) => {
     res.render('signup')
 })
 
-authRouter.get('/index', (req: any, res: any) => {
-    res.render('index')
-})
 
 authRouter.get('/chart', (req: any, res: any) => {
     res.render('chart')
 })
 
 authRouter.get('/logout', (req: any, res: any) => {
-    delete req.session.loggedIn
-    delete req.session.user
+    console.log("Anything", req.session.loggedIn)
+    delete req.session.loggedIn;
+    console.log(req.session.loggedIn)
+    delete req.session.user;
     res.redirect('/login')
 })
 
@@ -134,7 +141,7 @@ app.post('/login', (req: any, res: any, next: any) => {
         } else {
             req.session.loggedIn = true
             req.session.user = result
-            res.redirect('/index')
+            res.redirect('/')
         }
     })
 })
@@ -199,11 +206,18 @@ userRouter.get('/:username', (req: any, res: any, next: any) => {
 const authCheck = function (req: any, res: any, next: any) {
     if (req.session.loggedIn) {
         next()
-    } else res.redirect('/login')
+    } else {
+        res.redirect('/login')
+    }
 }
 
 app.get('/', authCheck, (req: any, res: any) => {
-    res.render('index', { name: req.session.username })
+        
+    res.render('index', { 
+        username: req.session.user.username,
+        email: req.session.user.email,
+        metrics: req.session.user.metrics 
+    })
 })
 
 /* Listener */ 

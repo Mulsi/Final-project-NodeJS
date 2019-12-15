@@ -2,15 +2,15 @@ import {LevelDB} from './leveldb'
 import WriteStream from 'level-ws'
 
 export class Metric {
-  public timestamp: string
-  public value: number
-  //public username: string
+    public username: string
+    public timestamp: string
+    public value: number
 
-  constructor(ts: string, v: number) {
-    this.timestamp = ts
-    this.value = v
-    //this.username = ts
-  }
+    constructor(un: string, ts: string, v: number) {
+        this.username = un
+        this.timestamp = ts
+        this.value = v
+    }
 }
 
 
@@ -23,16 +23,28 @@ export class MetricsHandler {
         this.db = LevelDB.open(dbPath)
     }
 
-    public save(key: number, metrics: Metric[], callback: (error: Error | null) => void) {
+    public save(username: string, metrics: Metric[], callback: (error: Error | null) => void) {
         const stream = WriteStream(this.db)
         stream.on('error', callback)
         stream.on('close', callback)
-        metrics.forEach((m: Metric) => {
-            stream.write({ key: `metric:${key}:${m.timestamp}`, value: m.value })
+        metrics.forEach((metric: Metric) => {
+            stream.write({ key: `metric:${username}:${metric.timestamp}`, value: metric.value })
         })
         console.log(metrics)
         stream.end()
-      }
+    }
+
+    // public save(key: number, metrics: Metric[], callback: (error: Error | null) => void) {
+    //     // Outdated, kept here for reference
+    //     const stream = WriteStream(this.db)
+    //     stream.on('error', callback)
+    //     stream.on('close', callback)
+    //     metrics.forEach((metric: Metric) => {
+    //         stream.write({ key: `metric:${key}:${metric.timestamp}`, value: metric.value })
+    //     })
+    //     console.log(metrics)
+    //     stream.end()
+    //   }
 
 
     public getAll(callback: (error: Error | null, result: any) => void) {
@@ -40,8 +52,10 @@ export class MetricsHandler {
         const stream = this.db.createReadStream()
             .on('data', function (data) {
                 console.log(data.key, '=', data.value)
-                let timestamp: string = data.key.split(':')[2]
-                let metric: Metric = new Metric(timestamp, data.value)
+                let dataElements = data.key.split(':');
+                let username: string = dataElements[1];
+                let timestamp: string = dataElements[2];
+                let metric: Metric = new Metric(username, timestamp, data.value)
                 metrics.push(metric)
             })
             .on('error', function (err) {
@@ -58,6 +72,7 @@ export class MetricsHandler {
 
 
     public getActualKey(key: string, callback: (error: Error | null, result: string) => void){
+        // This method is outdated, belongs to a time before usernames
         let actualKey = "Found no key";
         const stream = this.db.createReadStream()
             .on('data', function (data) {
@@ -82,10 +97,9 @@ export class MetricsHandler {
     }
 
     public delete(key: string, callback: (error: Error | null) => void){        
-        
         let err = this.db.del(key, (err) => {
             if (err){
-                console.log('Oh my!', err)
+                console.log('Could not delete :(', err)
                 return callback(err)
             }
         })
@@ -98,7 +112,7 @@ export class MetricsHandler {
             .on('data', function (data) {
                 let keyToCheck: string = data.key.split(':')[1]
                 if (key === keyToCheck){
-                    returnMetric = new Metric(data.key.split(':')[2], data.value);
+                    returnMetric = new Metric(data.key.split(':')[1], data.key.split(':')[2], data.value);
                 };
             })
             .on('error', function (err) {
@@ -112,16 +126,30 @@ export class MetricsHandler {
                 console.log(returnMetric)
                 console.log('Stream ended')
             })
-        
-        // { key: `metric:${key}${m.timestamp}`, value: m.value }
-        // let returnData = this.db.get(key, function (err, value) {
-        //     if (err) {
-        //         if (err.notFound) {
-        //             return callback(err, null)
-        //         }
-        //         return callback(err, null)
-        //     }
-        //     callback(null, value)
-        // })
     }
+
+    public getWithUser(username: any, callback: (error: Error | null, result: any | null) => void) {
+        let metrics: Metric[] = []
+
+        this.db.createReadStream()
+            .on('data', function (data) {
+                if (data.key.split(':')[1] === username) {
+                    let username: string = data.key.split(':')[1];
+                    let timestamp: string = data.key.split(':')[2];
+                    let metric: Metric = new Metric(username, timestamp, data.value);
+                    metrics.push(metric)
+                    // metrics.push(data)
+                }
+            })
+            .on('error', function (err) {
+                callback(err, null);
+            })
+            .on('close', function () {
+                console.log('Stream closed')
+            })
+            .on('end', function () {
+                callback(null, metrics);
+                console.log('Stream ended')
+            })
+    }    
 }

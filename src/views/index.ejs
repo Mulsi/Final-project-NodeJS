@@ -3,8 +3,12 @@
     
 <head>
     <% include partials/head %>
-
+</head>
+<body class= conatiner>
     <h1 className="h1">Hello user</h1>
+    <h1>Hello <%= username %></h1>
+</body>    
+    
 
 <script type="text/javascript">
 /*
@@ -54,7 +58,6 @@ window.onload = function () {
       
 </script>
 <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
-</head>
 
 
 
@@ -78,7 +81,7 @@ window.onload = function () {
     </button>
     <div id="metrics"></div>
 
-    <button class="btn btn-danger" type="submit" href="/login" onClick='document.location.href="/login"'>
+    <button class="btn btn-danger" type="submit" href="/logout" onClick='document.location.href="/logout"'>
         Log out
     </button>
 
