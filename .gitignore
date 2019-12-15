@@ -1,3 +1,9 @@
+<<<<<<< HEAD
 /node_modules
 /db
 /db_test
+=======
+db/
+node_modules/ 
+db_test/
+>>>>>>> 4488870ed2b66d3a342a088450ffe3a8748720fe
