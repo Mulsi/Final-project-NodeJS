@@ -94,8 +94,13 @@ app.post('/metrics/:id', (req: any, res: any) => {
 app.use(authRouter)
 
 authRouter.get('/login', (req: any, res: any) => {
-    res.render('login')
+    res.render('login', false)
 })
+
+// authRouter.get('/login/:error', (req: any, res: any) => {
+//     //Alternative render method for giving input to login form    
+//     res.render('login', req.params.error)
+// })
 
 authRouter.get('/signup', (req: any, res: any) => {
     res.render('signup')
@@ -120,10 +125,12 @@ app.post('/login', (req: any, res: any, next: any) => {
     dbUser.get(req.body.username, (err: Error | null, result?: User) => {
         if (result === undefined || !result.validatePassword(req.body.password)) {
             console.log('Failed to log in, because result was undefined, or password was incorrect')
-            res.redirect('/login')
+            // res.redirect('/login/bad_login_error')
+            res.redirect("/login")
         } else if (err) {
             console.log("Failed due to some unknown error");
-            res.redirect('/login')
+            // res.redirect('/login/unknown_error')
+            res.redirect("/login")
         } else {
             req.session.loggedIn = true
             req.session.user = result
