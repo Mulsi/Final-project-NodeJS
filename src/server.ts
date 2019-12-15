@@ -86,7 +86,7 @@ app.post('/metrics/:id', (req: any, res: any) => {
     dbMet.save(req.params.id, req.body, (err: Error | null) => {
         if (err) throw err
         res.status(200).send(req.params.id)
-        // res.status(200).send('Generic message for testing')
+        //res.status(200).send("Generic message for testing")
     })
 })
 

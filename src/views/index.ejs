@@ -1,11 +1,13 @@
 <!DOCTYPE HTML>
 <html>
+    
 <head>
     <% include partials/head %>
 
     <h1 className="h1">Hello user</h1>
 
 <script type="text/javascript">
+/*
 window.onload = function () {
     var chart = new CanvasJS.Chart("chartContainer",
     {
@@ -13,19 +15,20 @@ window.onload = function () {
         text: "Simple Date-Time Chart"
     },
     axisX:{
-        title: "timeline",
+        title: "Timestamp",
         gridThickness: 2
     },
     axisY: {
-        title: "Downloads"
+        title: "Value"
     },
     data: [
     {        
         type: "area",
         dataPoints: [//array
-        { x: new Date(2012, 01, 1), y: 26},
-        { x: new Date(2012, 01, 3), y: 38},
-        { x: new Date(2012, 01, 5), y: 43},
+        { x: 1332452, y: 10},
+        { x: 1332466, y: 12},
+        { x: 1332487, y: 14}
+        /*
         { x: new Date(2012, 01, 7), y: 29},
         { x: new Date(2012, 01, 11), y: 41},
         { x: new Date(2012, 01, 13), y: 54},
@@ -33,6 +36,8 @@ window.onload = function () {
         { x: new Date(2012, 01, 21), y: 60},
         { x: new Date(2012, 01, 25), y: 53},
         { x: new Date(2012, 01, 27), y: 60}
+    
+        {Mising end comment}
         ]
     }
     ]
@@ -40,9 +45,47 @@ window.onload = function () {
 
     chart.render();
 }
+
+*/
+
+
+$('#show-metrics').click((e) => {
+    $.get("/metrics", function (data) {
+      console.log(data);
+      let timestampValueArr = [];
+      let timestampValueObj = {};
+      for (let i = 0; i < data.length; i++) {
+        // timestampValueObj.timestamp = data[i].timestamp;
+        // timestampValueObj.value = data[i].value;
+        timestampValueArr.push({ "timestamp": parseInt(data[i].timestamp), "value": parseInt(data[i].value) });
+        console.log(timestampValueArr);
+      }
+      var chart = AmCharts.makeChart("chartdiv", {
+        "type": "serial",
+        "theme": "light",
+        "dataProvider": timestampValueArr,
+        "graphs": [{
+          "bullet": "round",
+          "type": "smoothedLine",
+          "valueField": "value"
+        }],
+        "categoryField": "timestamp",
+        "categoryAxis": {
+          "parseDates": true,
+          "minPeriod": "fff"
+        }
+      
+      });
+    })
+});
+
+      
 </script>
 <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 </head>
+
+
+
 <body>
 <div id="chartContainer" style="height: 300px; width: 100%;">
 </div>
@@ -58,6 +101,7 @@ window.onload = function () {
     <button class="btn btn-secondary" type="submit">
         Delete metrics
     </button>
+    <div id="metrics"></div>
     <button class="btn btn-danger" type="submit" href="/login" onClick='document.location.href="/login"'>
         Log out
     </button>
@@ -79,8 +123,9 @@ window.onload = function () {
         console.log(content)
     });
     })
-    
+
+        
   </script>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script> 
