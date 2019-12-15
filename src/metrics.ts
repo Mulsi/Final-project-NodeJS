@@ -23,12 +23,12 @@ export class MetricsHandler {
         this.db = LevelDB.open(dbPath)
     }
 
-    public save(metrics: Metric[], callback: (error: Error | null) => void) {
+    public save(username: string, metrics: Metric[], callback: (error: Error | null) => void) {
         const stream = WriteStream(this.db)
         stream.on('error', callback)
         stream.on('close', callback)
         metrics.forEach((metric: Metric) => {
-            stream.write({ key: `metric:${metric.username}:${metric.timestamp}`, value: metric.value })
+            stream.write({ key: `metric:${username}:${metric.timestamp}`, value: metric.value })
         })
         console.log(metrics)
         stream.end()

@@ -90,6 +90,14 @@ app.post('/metrics/:id', (req: any, res: any) => {
     })
 })
 
+app.post('/metrics', (req: any, res: any) => {
+    dbMet.save(req.session.user.username, req.body, (err: Error | null) => {
+        if (err) throw err
+        res.status(200).send(req.params.id)
+        //res.status(200).send("Generic message for testing")
+    })
+})
+
 /* User authentication and creation */
 app.use(authRouter)
 
