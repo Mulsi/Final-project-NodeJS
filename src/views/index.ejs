@@ -105,7 +105,7 @@ window.onload = function () {
         return 'timestamp: '+d.timestamp+', value: '+d.value+'';
         })
         $('#metrics').append(content.join("\n"));
-        console.log(content)
+        //console.log(content)
     });
     })
 
@@ -113,30 +113,34 @@ window.onload = function () {
 
     $('#display-metrics').click((e) => {
     $.get("/metrics", function (data) {
-      console.log(data);
+      //console.log(data);
       let timestampValueArr = [];
       for (let i = 0; i < data.length; i++) {
         timestampValueArr.push({ "timestamp": parseInt(data[i].timestamp), "value": parseInt(data[i].value) });
         console.log(timestampValueArr);
-      }
+      }}
+    )});
+
       /*
-      var chart = AmCharts.makeChart("chartdiv", {
-        "type": "serial",
-        "theme": "light",
-        "dataProvider": timestampValueArr,
-        "graphs": [{
-          "bullet": "round",
-          "type": "smoothedLine",
-          "valueField": "value"
-        }],
-        "categoryField": "timestamp",
-        "categoryAxis": {
-          "parseDates": true,
-          "minPeriod": "fff"
+        var chart = AmCharts.makeChart("chartdiv", {
+            "type": "serial",
+            "theme": "light",
+            "dataProvider": tempData,
+            "graphs": [{
+            "bullet": "round",
+            "type": "smoothedLine",
+            "valueField": "value"
+            }],
+            "categoryField": "timestamp",
+            "categoryAxis": {
+            "parseDates": true,
+            "minPeriod": "fff"
+            }
+        });
         }
-      });
       */
 
+      
     /*
     window.onload = function () {
         console.log(timestampValueArr)
@@ -158,30 +162,52 @@ window.onload = function () {
 
 */
 
+function myChart () {
+    let timestampValueArr = [];
+      for (let i = 0; i < data.length; i++) {
+        timestampValueArr.push({ "timestamp": parseInt(data[i].timestamp), "value": parseInt(data[i].value) });
+        console.log(timestampValueArr);
 
-var chart = new CanvasJS.Chart("chartContainer",
-{
-	title:{
-		text: "Update chart type on button click",
-	},
+        var chart = new CanvasJS.Chart("chartContainer",
+{      
 	data: [
 	{
 		type: "column",
-        indexLabel: "{label} : {y}",
-        indexLabelFontColor: "black",
 		dataPoints: [
- 			{  y: 8.24,  label: "Banana"  },
-            {  y: 7.16,  label: "Orange"  },
-            {  y: 4.67,  label: "Grapes"  },
-            {  y: 3.67,  label: "Mango"   },       
-            {  y: 5.98,  label: "Papaya"  }
-		]
+		{ x: 10, y: 71 },
+		{ x: 20, y: 55},
+		{ x: 30, y: 50 },
+		{ x: 40, y: 65 },
+		{ x: 50, y: 95 }
+	]
 	}
 	]
 });
+
 chart.render();
 
+$("#add").click(function(){  
+    var newSeries = {
+        type: "column",
+        dataPoints: [
+            { x: 10, y: 71 },
+            { x: 20, y: 55},
+            { x: 30, y: 50 },
+            { x: 40, y: 65 },
+            { x: 50, y: 95 }
+        ]
+    };
+    chart.options.data.push(newSeries);
+    //chart.options.data[0].dataPoints.push({ x: 100, y: 14});
+    chart.render();
+});
 
+
+
+
+// This part is just a test code I tried, not important
+
+/*
 function chartTypeChanged() {
     
     chart.options.data[0].type = "line";   // you can update chart type here   
@@ -198,7 +224,7 @@ button.addEventListener( "click",  chartTypeChanged);
 
     })
 });
-
+*/
         
   </script>
 
