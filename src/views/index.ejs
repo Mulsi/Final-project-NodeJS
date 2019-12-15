@@ -124,46 +124,7 @@ window.onload = function () {
       }}
     )});
 
-      /*
-        var chart = AmCharts.makeChart("chartdiv", {
-            "type": "serial",
-            "theme": "light",
-            "dataProvider": tempData,
-            "graphs": [{
-            "bullet": "round",
-            "type": "smoothedLine",
-            "valueField": "value"
-            }],
-            "categoryField": "timestamp",
-            "categoryAxis": {
-            "parseDates": true,
-            "minPeriod": "fff"
-            }
-        });
-        }
-      */
-
       
-    /*
-    window.onload = function () {
-        console.log(timestampValueArr)
-        var chart = new CanvasJS.Chart("chartContainer",{
-            title :{
-                text: "Metrics chart"
-            },
-            data: [{
-                type: "line",
-                //dataPoints : dps
-                dataProvider : timestampValueArr,
-                dataPoints: [
-                    { label: timestamp, y: value }
-                ]
-            }]
-        });
-        chart.render();
-    };
-
-*/
 
 function myChart () {
     let timestampValueArr = [];
@@ -207,7 +168,6 @@ $("#add").click(function(){
 
 
 
-
 // This part is just a test code I tried, not important
 
 /*
@@ -224,12 +184,53 @@ button.addEventListener( "click",  chartTypeChanged);
 
 
 
-
+*/
     })
 });
-*/
+
         
   </script>
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script> 
+
+/*
+var chart = AmCharts.makeChart("chartdiv", {
+"type": "serial",
+"theme": "light",
+"dataProvider": tempData,
+"graphs": [{
+"bullet": "round",
+"type": "smoothedLine",
+"valueField": "value"
+}],
+"categoryField": "timestamp",
+"categoryAxis": {
+"parseDates": true,
+"minPeriod": "fff"
+}
+});
+}
+*/
+
+
+/*
+window.onload = function () {
+console.log(timestampValueArr)
+var chart = new CanvasJS.Chart("chartContainer",{
+title :{
+text: "Metrics chart"
+},
+data: [{
+type: "line",
+//dataPoints : dps
+dataProvider : timestampValueArr,
+dataPoints: [
+{ label: timestamp, y: value }
+]
+}]
+});
+chart.render();
+};
+
+*/
