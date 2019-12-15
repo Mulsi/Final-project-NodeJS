@@ -49,35 +49,7 @@ window.onload = function () {
 */
 
 
-$('#show-metrics').click((e) => {
-    $.get("/metrics", function (data) {
-      console.log(data);
-      let timestampValueArr = [];
-      let timestampValueObj = {};
-      for (let i = 0; i < data.length; i++) {
-        // timestampValueObj.timestamp = data[i].timestamp;
-        // timestampValueObj.value = data[i].value;
-        timestampValueArr.push({ "timestamp": parseInt(data[i].timestamp), "value": parseInt(data[i].value) });
-        console.log(timestampValueArr);
-      }
-      var chart = AmCharts.makeChart("chartdiv", {
-        "type": "serial",
-        "theme": "light",
-        "dataProvider": timestampValueArr,
-        "graphs": [{
-          "bullet": "round",
-          "type": "smoothedLine",
-          "valueField": "value"
-        }],
-        "categoryField": "timestamp",
-        "categoryAxis": {
-          "parseDates": true,
-          "minPeriod": "fff"
-        }
-      
-      });
-    })
-});
+
 
       
 </script>
@@ -95,23 +67,35 @@ $('#show-metrics').click((e) => {
         Get metrics
     </button>
     <div id="metrics"></div>
-    <button class="btn btn-secondary" type="submit">
+   
+    <button class="btn btn-secondary" type="submit" id="display-metrics">
         Update metrics
     </button>
-    <div id="show-metrics"></div>
+    <div id="metrics"></div>
+   
     <button class="btn btn-secondary" type="submit">
         Delete metrics
     </button>
     <div id="metrics"></div>
+
     <button class="btn btn-danger" type="submit" href="/login" onClick='document.location.href="/login"'>
         Log out
     </button>
+
+    <div id="chartContainer" style="height: 280px; width: 100%;"></div>
+    <button id="button">Update Chart Type</button>
+
 </div>
 
 
 
 </body>
 </html>
+
+<script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<script src="//www.amcharts.com/lib/3/amcharts.js"></script>
+<script src="//www.amcharts.com/lib/3/serial.js"></script>
+<script src="//www.amcharts.com/lib/3/themes/light.js"></script>
 
 <script>
     $('#show-metrics').click((e) => {
@@ -124,6 +108,96 @@ $('#show-metrics').click((e) => {
         console.log(content)
     });
     })
+
+
+
+    $('#display-metrics').click((e) => {
+    $.get("/metrics", function (data) {
+      console.log(data);
+      let timestampValueArr = [];
+      for (let i = 0; i < data.length; i++) {
+        timestampValueArr.push({ "timestamp": parseInt(data[i].timestamp), "value": parseInt(data[i].value) });
+        console.log(timestampValueArr);
+      }
+      /*
+      var chart = AmCharts.makeChart("chartdiv", {
+        "type": "serial",
+        "theme": "light",
+        "dataProvider": timestampValueArr,
+        "graphs": [{
+          "bullet": "round",
+          "type": "smoothedLine",
+          "valueField": "value"
+        }],
+        "categoryField": "timestamp",
+        "categoryAxis": {
+          "parseDates": true,
+          "minPeriod": "fff"
+        }
+      });
+      */
+
+    /*
+    window.onload = function () {
+        console.log(timestampValueArr)
+        var chart = new CanvasJS.Chart("chartContainer",{
+            title :{
+                text: "Metrics chart"
+            },
+            data: [{
+                type: "line",
+                //dataPoints : dps
+                dataProvider : timestampValueArr,
+                dataPoints: [
+                    { label: timestamp, y: value }
+                ]
+            }]
+        });
+        chart.render();
+    };
+
+*/
+
+
+var chart = new CanvasJS.Chart("chartContainer",
+{
+	title:{
+		text: "Update chart type on button click",
+	},
+	data: [
+	{
+		type: "column",
+        indexLabel: "{label} : {y}",
+        indexLabelFontColor: "black",
+		dataPoints: [
+ 			{  y: 8.24,  label: "Banana"  },
+            {  y: 7.16,  label: "Orange"  },
+            {  y: 4.67,  label: "Grapes"  },
+            {  y: 3.67,  label: "Mango"   },       
+            {  y: 5.98,  label: "Papaya"  }
+		]
+	}
+	]
+});
+chart.render();
+
+
+function chartTypeChanged() {
+    
+    chart.options.data[0].type = "line";   // you can update chart type here   
+    chart.render();
+}
+
+var button = document.getElementById( "button" );
+button.addEventListener( "click",  chartTypeChanged);
+
+
+
+
+
+
+    })
+});
 
         
   </script>
