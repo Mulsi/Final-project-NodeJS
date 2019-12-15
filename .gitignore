@@ -1,1 +1,4 @@
 node_modules/
+db/users/*
+db/metrics/*
+db/sessions/*
