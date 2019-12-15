@@ -112,33 +112,59 @@ window.onload = function () {
 
 
     $('#display-metrics').click((e) => {
-    $.get("/metrics", function (data) {
+    
+    /*
+      $.get("/metrics", function (data) {
       //console.log(data);
       let timestampValueArr = [];
       for (let i = 0; i < data.length; i++) {
         timestampValueArr.push({ "timestamp": parseInt(data[i].timestamp), "value": parseInt(data[i].value) });
         console.log(timestampValueArr);
-      }}
-    )});
+        
+       
+    let data = {};
+        console.log((+new Date(document.getElementById('date-value').value)));
+        data.timestamp = (+new Date(document.getElementById('date-value').value));
+        data.value = $('#metric-value').val();
+        console.log(data);
+        */
 
-      /*
-        var chart = AmCharts.makeChart("chartdiv", {
-            "type": "serial",
-            "theme": "light",
-            "dataProvider": tempData,
-            "graphs": [{
-            "bullet": "round",
-            "type": "smoothedLine",
-            "valueField": "value"
-            }],
-            "categoryField": "timestamp",
-            "categoryAxis": {
-            "parseDates": true,
-            "minPeriod": "fff"
+        $.ajax({
+            dataType : "json",
+            type: "POST",
+            url: '/index',
+            success: function(data)
+            {
+                console.log(data)
+                let timestampValueArr = [];
+                for (let i = 0; i < data.length; i++) {
+                    timestampValueArr.push({ "timestamp": parseInt(data[i].timestamp), "value": parseInt(data[i].value) });
+                    console.log(timestampValueArr);
+
+                    var chart = new CanvasJS.Chart("chartContainer",
+                    {
+
+                        title:{
+                        text: "User chart"
+                        },
+                        data: [
+                        {
+                        type: "line",
+
+                        dataPoints: timestampValueArr
+
+                        }
+                        ]
+                    });
+
+                    chart.render();
+
             }
-        });
-        }
-      */
+        }});
+      //}})
+    });
+
+
 
       
     /*
@@ -162,45 +188,36 @@ window.onload = function () {
 
 */
 
+
+/*
 function myChart () {
     let timestampValueArr = [];
+    console.log(data)
       for (let i = 0; i < data.length; i++) {
         timestampValueArr.push({ "timestamp": parseInt(data[i].timestamp), "value": parseInt(data[i].value) });
         console.log(timestampValueArr);
+        
 
         var chart = new CanvasJS.Chart("chartContainer",
-{      
+{
+	title:{
+		text: "Update chart type on button click",
+	},
 	data: [
 	{
 		type: "column",
-		dataPoints: [
-		{ x: 10, y: 71 },
-		{ x: 20, y: 55},
-		{ x: 30, y: 50 },
-		{ x: 40, y: 65 },
-		{ x: 50, y: 95 }
-	]
+        indexLabel: "{label} : {y}",
+        indexLabelFontColor: "black",
+		dataPoints: timestampValueArr
 	}
 	]
 });
-
 chart.render();
 
-$("#add").click(function(){  
-    var newSeries = {
-        type: "column",
-        dataPoints: [
-            { x: 10, y: 71 },
-            { x: 20, y: 55},
-            { x: 30, y: 50 },
-            { x: 40, y: 65 },
-            { x: 50, y: 95 }
-        ]
-    };
-    chart.options.data.push(newSeries);
-    //chart.options.data[0].dataPoints.push({ x: 100, y: 14});
-    chart.render();
-});
+
+}};
+*/
+
 
 
 
