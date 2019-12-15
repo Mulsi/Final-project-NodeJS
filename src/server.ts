@@ -197,18 +197,16 @@ userRouter.get('/:username', (req: any, res: any, next: any) => {
 
 const authCheck = function (req: any, res: any, next: any) {
     if (req.session.loggedIn) {
-        console.log("Consider myself LOGGED IN", req.session.loggedIn)
         next()
     } else {
-        console.log("Consider myself LOGGED OUT")
         res.redirect('/login')
     }
 }
 
 app.get('/', authCheck, (req: any, res: any) => {
-    console.log("Redirecting to index")
+        
     res.render('index', { 
-        username: req.session.username,
+        username: req.session.user.username,
         email: req.session.user.email,
         metrics: req.session.user.metrics 
     })
