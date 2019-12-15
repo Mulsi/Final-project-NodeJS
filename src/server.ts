@@ -118,9 +118,11 @@ authRouter.get('/logout', (req: any, res: any) => {
 
 app.post('/login', (req: any, res: any, next: any) => {
     dbUser.get(req.body.username, (err: Error | null, result?: User) => {
-        if (err) next(err)
-        else if (result === undefined || !result.validatePassword(req.body.password)) {
+        if (result === undefined || !result.validatePassword(req.body.password)) {
             console.log('Failed to log in, because result was undefined, or password was incorrect')
+            res.redirect('/login')
+        } else if (err) {
+            console.log("Failed due to some unknown error");
             res.redirect('/login')
         } else {
             req.session.loggedIn = true
