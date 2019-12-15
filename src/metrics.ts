@@ -4,12 +4,12 @@ import WriteStream from 'level-ws'
 export class Metric {
   public timestamp: string
   public value: number
-  public username: string
+  //public username: string
 
   constructor(ts: string, v: number) {
     this.timestamp = ts
     this.value = v
-    this.username = ts
+    //this.username = ts
   }
 }
 
@@ -30,8 +30,10 @@ export class MetricsHandler {
         metrics.forEach((m: Metric) => {
             stream.write({ key: `metric:${key}:${m.timestamp}`, value: m.value })
         })
+        console.log(metrics)
         stream.end()
       }
+
 
     public getAll(callback: (error: Error | null, result: any) => void) {
         let metrics: Metric[] = []
