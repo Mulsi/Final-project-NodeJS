@@ -75,7 +75,12 @@ window.onload = function () {
         Update metrics
     </button>
     <div id="metrics"></div>
-   
+
+    <button class="btn btn-secondary" type="submit" id="add-metrics">
+        Add metrics
+    </button>
+    <div id="metrics"></div>
+
     <button class="btn btn-secondary" type="submit">
         Delete metrics
     </button>
@@ -112,6 +117,26 @@ window.onload = function () {
     });
     })
 
+    $('#add-metrics').click((e) => {
+            let data = {};
+            //Using dummy value for date and value
+            data.timestamp = (+new Date("2015-03-25"));
+            data.value = 10;
+            $.ajax({
+                type: "POST",
+                url: "/metrics",
+                // The key needs to match your method's input parameter (case-sensitive).
+                data: JSON.stringify([data]),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    console.log(data);
+                },
+                failure: function (errMsg) {
+                    alert(errMsg);
+                }
+            })
+        })
 
 
     $('#display-metrics').click((e) => {
@@ -171,26 +196,6 @@ window.onload = function () {
 
 
       
-    /*
-    window.onload = function () {
-        console.log(timestampValueArr)
-        var chart = new CanvasJS.Chart("chartContainer",{
-            title :{
-                text: "Metrics chart"
-            },
-            data: [{
-                type: "line",
-                //dataPoints : dps
-                dataProvider : timestampValueArr,
-                dataPoints: [
-                    { label: timestamp, y: value }
-                ]
-            }]
-        });
-        chart.render();
-    };
-
-*/
 
 
 /*
@@ -225,7 +230,6 @@ chart.render();
 
 
 
-
 // This part is just a test code I tried, not important
 
 /*
@@ -242,12 +246,50 @@ button.addEventListener( "click",  chartTypeChanged);
 
 
 
-
-    })
-});
 */
-        
+
+        /*
+var chart = AmCharts.makeChart("chartdiv", {
+"type": "serial",
+"theme": "light",
+"dataProvider": tempData,
+"graphs": [{
+"bullet": "round",
+"type": "smoothedLine",
+"valueField": "value"
+}],
+"categoryField": "timestamp",
+"categoryAxis": {
+"parseDates": true,
+"minPeriod": "fff"
+}
+});
+}
+*/
+
+
+/*
+window.onload = function () {
+console.log(timestampValueArr)
+var chart = new CanvasJS.Chart("chartContainer",{
+title :{
+text: "Metrics chart"
+},
+data: [{
+type: "line",
+//dataPoints : dps
+dataProvider : timestampValueArr,
+dataPoints: [
+{ label: timestamp, y: value }
+]
+}]
+});
+chart.render();
+};
+
+*/
   </script>
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script> 
+
