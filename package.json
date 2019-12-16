@@ -1,13 +1,13 @@
 {
-  "name": "2-typescript_2",
+  "name": "final-project-nodejs",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha -r ts-node/register src/**/*.test.ts",
-    "build": "./node_modules/.bin/tsc -p tsconfig.json",
-    "start": "./node_modules/.bin/ts-node src/server.ts",
-    "dev": "./node_modules/.bin/nodemon "
+    "test": "mocha -r ts-node/register src/**/*.test.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "ts-node src/server.ts",
+    "dev": "nodemon "
   },
   "author": "",
   "license": "ISC",
@@ -38,5 +38,13 @@
     "level-ws": "^2.0.0",
     "leveldown": "^5.4.1",
     "levelup": "^4.3.2"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mulsi/Final-project-NodeJS.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Mulsi/Final-project-NodeJS/issues"
+  },
+  "homepage": "https://github.com/Mulsi/Final-project-NodeJS#readme"
 }
