@@ -134,8 +134,9 @@ window.onload = function () {
 
         $.ajax({
             dataType : "json",
-            type: "POST",
-            url: '/index',
+            type: 'POST',
+            url: '/metrics/1',
+            data: {},
             success: function(data)
             {
                 console.log(data)
