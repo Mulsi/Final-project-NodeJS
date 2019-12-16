@@ -10,60 +10,112 @@
 </body>    
     
 
-<script type="text/javascript">
-/*
-window.onload = function () {
-    var chart = new CanvasJS.Chart("chartContainer",
-    {
-      title:{
-        text: "Simple Date-Time Chart"
-    },
-    axisX:{
-        title: "Timestamp",
-        gridThickness: 2
-    },
-    axisY: {
-        title: "Value"
-    },
-    data: [
-    {        
-        type: "area",
-        dataPoints: [//array
-        { x: 1332452, y: 10},
-        { x: 1332466, y: 12},
-        { x: 1332487, y: 14}
-        /*
-        { x: new Date(2012, 01, 7), y: 29},
-        { x: new Date(2012, 01, 11), y: 41},
-        { x: new Date(2012, 01, 13), y: 54},
-        { x: new Date(2012, 01, 20), y: 66},
-        { x: new Date(2012, 01, 21), y: 60},
-        { x: new Date(2012, 01, 25), y: 53},
-        { x: new Date(2012, 01, 27), y: 60}
-    
-        {Mising end comment}
-        ]
-    }
-    ]
-});
-
-    chart.render();
-}
-
-*/
-
-
-
-
-      
-</script>
-<script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 
 
 
 <body>
 <div id="chartContainer" style="height: 300px; width: 100%;">
 </div>
+
+
+    <form action="/convert" method="post">
+        <div class="form-group">
+        <label for="form_datetime">Datetime : </label>
+        <input type="datetime-local" id="form_timestamp" name="dateTime" value="2019-12-01T00:00" min="1970-01-01T00:00" max="2100-12-31T23:59">
+        <p><%= datetime === "" ? "" : datetime %></p>
+        </div>
+        <button class="btn btn-primary " type="submit" value="Submit">Convert datetime into timestamp</button>
+    </form>
+
+
+    <br/>
+    <form action="/add" method="post">
+    <div class="form-group">
+        <label for="form_timestamp">Timestamp : </label>
+        <input id="form_timestamp" type="number" placeholder="Enter a positif number" name="timestamp" min="0"/>
+        <label for="form_timestamp">, Value: </label>
+        <input id="form_timestamp" type="number" placeholder="Enter a number" name="value" />
+        <button class="btn btn-success " type="submit" value="Submit">Add/update a metric</button>
+    </div>
+    </form>
+
+    <form action="/delete" method="post">
+        <div class="form-group">
+          <label for="form_timestamp">Timestamp : </label>
+          <input id="form_timestamp" type="number" placeholder="Enter a positif number" name="timestamp" min="0"/>
+          <button class="btn btn-success" type="submit" value="Submit">Delete a metric</button>
+        </div>
+      </form>
+  
+      <br/>
+      <br/>
+  
+
+
+      <div id="MyChart"></div>
+
+
+    <script>
+        $.getJSON("/metrics/<%= username %>", {}, (data) => {
+          var margin = {top: 10, right: 30, bottom: 50, left: 60},
+          width = 800 - margin.left - margin.right,
+          height = 600 - margin.top - margin.bottom;
+  
+        // append the svg object to the body of the page
+        var svg = d3.select("#MyChart")
+          .append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+          .append("g")
+          .attr("transform",
+              "translate(" + margin.left + "," + margin.top + ")");
+  
+        // Add X axis --> it is a date format
+        var x = d3.scaleTime()
+            .domain(d3.extent(data, function(d) { return d.timestamp; })) //extent find the min & max in data
+            .range([ 0, width ]);
+        svg.append("g")
+            .attr("transform", "translate(0," + height + ")")
+            .call(d3.axisBottom(x));
+  
+        // Add Y axis
+        var y = d3.scaleLinear()
+            .domain([0, d3.max(data, function(d) { return +d.value; })])
+            .range([ height, 0 ]);
+        svg.append("g")
+            .call(d3.axisLeft(y));
+  
+        // Add the line
+        svg.append("path")
+            .datum(data)
+            .attr("fill", "none")
+            .attr("stroke", "steelblue")
+            .attr("stroke-width", 1.5)
+            .attr("d", d3.line()
+            .x(function(d) { return x(d.timestamp) })
+            .y(function(d) { return y(d.value) })
+            )
+  
+        // text label for the x axis
+        svg.append("text")             
+            .attr("transform",
+                "translate(" + (width/2) + " ," + (height + margin.top + 30) + ")")
+            .style("text-anchor", "middle")
+            .text("Date");
+  
+        // text label for the y axis
+        svg.append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 0 - margin.left)
+            .attr("x",0 - (height / 2))
+            .attr("dy", "1em")
+            .style("text-anchor", "middle")
+            .text("Value");  
+  
+        });
+    </script>
+
+
 
 <div class="text-center">
     <button class="btn btn-secondary" type="submit" id="show-metrics">
@@ -157,6 +209,7 @@ window.onload = function () {
         console.log(data);
         */
 
+        /*
         $.ajax({
             dataType : "json",
             type: 'POST',
@@ -190,106 +243,25 @@ window.onload = function () {
 
             }
         }});
+        */
       //}})
     });
 
-
-
-      
-
-
-/*
-function myChart () {
-    let timestampValueArr = [];
-    console.log(data)
-      for (let i = 0; i < data.length; i++) {
-        timestampValueArr.push({ "timestamp": parseInt(data[i].timestamp), "value": parseInt(data[i].value) });
-        console.log(timestampValueArr);
-        
-
-        var chart = new CanvasJS.Chart("chartContainer",
-{
-	title:{
-		text: "Update chart type on button click",
-	},
-	data: [
-	{
-		type: "column",
-        indexLabel: "{label} : {y}",
-        indexLabelFontColor: "black",
-		dataPoints: timestampValueArr
-	}
-	]
-});
-chart.render();
-
-
-}};
-*/
-
-
-
-
-// This part is just a test code I tried, not important
-
-/*
-function chartTypeChanged() {
-    
-    chart.options.data[0].type = "line";   // you can update chart type here   
-    chart.render();
-}
-
-var button = document.getElementById( "button" );
-button.addEventListener( "click",  chartTypeChanged);
-
-
-
-
-
-*/
-
-        /*
-var chart = AmCharts.makeChart("chartdiv", {
-"type": "serial",
-"theme": "light",
-"dataProvider": tempData,
-"graphs": [{
-"bullet": "round",
-"type": "smoothedLine",
-"valueField": "value"
-}],
-"categoryField": "timestamp",
-"categoryAxis": {
-"parseDates": true,
-"minPeriod": "fff"
-}
-});
-}
-*/
-
-
-/*
-window.onload = function () {
-console.log(timestampValueArr)
-var chart = new CanvasJS.Chart("chartContainer",{
-title :{
-text: "Metrics chart"
-},
-data: [{
-type: "line",
-//dataPoints : dps
-dataProvider : timestampValueArr,
-dataPoints: [
-{ label: timestamp, y: value }
-]
-}]
-});
-chart.render();
-};
-
-*/
   </script>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script> 
+    
+    <script>
+        /* This part lets us display all of our metrics */
+        $.getJSON("/metrics", {}, (data) => {
+        const content = data.map(d => {
+            return '<li> timestamp: '+d.timestamp+', value: '+d.value+'</li>';
+        })
+        console.log(typeof content)
+        $('#metrics').append(content.join("\n"));
+        });
+    </script>
 
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script> 
+<script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>

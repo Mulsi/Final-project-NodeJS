@@ -67,6 +67,8 @@ app.get(
 )
 
 
+
+
 app.delete(
     '/metrics/:id',
     (req: any, res: any) => {
@@ -128,6 +130,24 @@ authRouter.get('/logout', (req: any, res: any) => {
 })
 
 
+//Add a new metric in user's database
+authRouter.post('/add', (req: any, res: any, next: any) => {
+    if (req.body.timestamp !=="" && req.body.value !=="" && !isNaN(Number(req.body.value)) && !isNaN(Number(req.body.timestamp))) {
+      dbMet.add(req.session.user.username, req.body.timestamp, req.body.value)
+      res.redirect('/')
+    }
+  })
+
+
+//Convert datetime into timestamp
+authRouter.post('/convert', (req: any, res: any, next: any) => {
+    var time : string = String(new Date(req.body.dateTime).getTime())
+    var Datetime : string = "The timestamp of "+req.body.dateTime+" is : "+time+""
+    var Timestamp : string = ""
+    res.render('index', { username: req.session.user.username, datetime : Datetime, timestamp : Timestamp})
+  })
+
+
 app.post('/login', (req: any, res: any, next: any) => {
     dbUser.get(req.body.username, (err: Error | null, result?: User) => {
         if (result === undefined || !result.validatePassword(req.body.password)) {
@@ -176,6 +196,8 @@ app.get(
     }
 )
 
+
+
 /* User stuff? */
 
 userRouter.post('/', (req: any, res: any, next: any) => {
@@ -212,11 +234,14 @@ const authCheck = function (req: any, res: any, next: any) {
 }
 
 app.get('/', authCheck, (req: any, res: any) => {
-        
+    var datetime : string = ""
+    var timestamp : string = ""
     res.render('index', { 
         username: req.session.user.username,
         email: req.session.user.email,
-        metrics: req.session.user.metrics 
+        metrics: req.session.user.metrics,
+        datetime : datetime,
+        timestamp : timestamp
     })
 })
 

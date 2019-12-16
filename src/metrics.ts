@@ -106,6 +106,13 @@ export class MetricsHandler {
         callback(err)
     }
 
+     //Add a new metric in user's database
+    public add(username : string, timestamp: string, value : string) {
+        let key : string = "metric:"+username+":"+timestamp+""
+        let Value : string = value
+        this.db.put(key,Value, (err)=>null)
+    }
+
     public getOne(key: string, callback: (error: Error | null, result: Metric) => void){
         let returnMetric: Metric;
         const stream = this.db.createReadStream()
