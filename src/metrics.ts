@@ -47,7 +47,7 @@ export class MetricsHandler {
     //   }
 
 
-    public getAll(key: string, callback: (error: Error | null, result: Metric[] | null) => void) {
+    public getAll(callback: (error: Error | null, result: Metric[] | null) => void) {
         let metrics: Metric[] = []
         const stream = this.db.createReadStream()
             .on('data', function (data) {
@@ -109,42 +109,30 @@ export class MetricsHandler {
 
 
 
-    public getActualKey(key: string, callback: (error: Error | null, result: string) => void){
-        // This method is outdated, belongs to a time before usernames
-        let actualKey = "Found no key";
-        const stream = this.db.createReadStream()
-            .on('data', function (data) {
-                console.log(data.key, '=', data.value)
-                let keyToCheck: string = data.key.split(':')[1]
-                console.log(key === keyToCheck)
-                if (key === keyToCheck) {
-                    actualKey = data.key;
-                };
-                console.log(actualKey);
-            })
-            .on('error', function (err) {
-                callback;
-            })
-            .on('close', function () {
-                console.log('Stream closed')
-            })
-            .on('end', function () {
-                console.log('Stream ended')
-                callback(null, actualKey);
-            })
-    }
-
-    /*
-    public delete(key: string, callback: (error: Error | null) => void){        
-        let err = this.db.del(key, (err) => {
-            if (err){
-                console.log('Could not delete :(', err)
-                return callback(err)
-            }
-        })
-        callback(err)
-    }
-    */
+    // public getActualKey(key: string, callback: (error: Error | null, result: string) => void){
+    //     // This method is outdated, belongs to a time before usernames
+    //     let actualKey = "Found no key";
+    //     const stream = this.db.createReadStream()
+    //         .on('data', function (data) {
+    //             console.log(data.key, '=', data.value)
+    //             let keyToCheck: string = data.key.split(':')[1]
+    //             console.log(key === keyToCheck)
+    //             if (key === keyToCheck) {
+    //                 actualKey = data.key;
+    //             };
+    //             console.log(actualKey);
+    //         })
+    //         .on('error', function (err) {
+    //             callback;
+    //         })
+    //         .on('close', function () {
+    //             console.log('Stream closed')
+    //         })
+    //         .on('end', function () {
+    //             console.log('Stream ended')
+    //             callback(null, actualKey);
+    //         })
+    // }
     
     //Delete user's metric in the database
     
@@ -163,28 +151,28 @@ export class MetricsHandler {
 
 
 
-    // Do we need getOne?
-    public getOne(key: string, callback: (error: Error | null, result: Metric) => void){
-        let returnMetric: Metric;
-        const stream = this.db.createReadStream()
-            .on('data', function (data) {
-                let keyToCheck: string = data.key.split(':')[1]
-                if (key === keyToCheck){
-                    returnMetric = new Metric(data.key.split(':')[1], data.key.split(':')[2], data.value);
-                };
-            })
-            .on('error', function (err) {
-                callback;
-            })
-            .on('close', function () {
-                console.log('Stream closed')
-            })
-            .on('end', function () {
-                callback(null, returnMetric)
-                console.log(returnMetric)
-                console.log('Stream ended')
-            })
-    }
+    // Do we need getOne? Archived in case of later use
+    // public getOne(key: string, callback: (error: Error | null, result: Metric) => void){
+    //     let returnMetric: Metric;
+    //     const stream = this.db.createReadStream()
+    //         .on('data', function (data) {
+    //             let keyToCheck: string = data.key.split(':')[1]
+    //             if (key === keyToCheck){
+    //                 returnMetric = new Metric(data.key.split(':')[1], data.key.split(':')[2], data.value);
+    //             };
+    //         })
+    //         .on('error', function (err) {
+    //             callback;
+    //         })
+    //         .on('close', function () {
+    //             console.log('Stream closed')
+    //         })
+    //         .on('end', function () {
+    //             callback(null, returnMetric)
+    //             console.log(returnMetric)
+    //             console.log('Stream ended')
+    //         })
+    // }
 
     public getWithUser(username: any, callback: (error: Error | null, result: any | null) => void) {
         let metrics: Metric[] = []
