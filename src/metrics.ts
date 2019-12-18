@@ -72,41 +72,6 @@ export class MetricsHandler {
             })
     }
 
-    /*
-    public getAll(key: string, callback: (error: Error | null, result: Metric[] | null) => void) {
-        // Read
-        let metrics: Metric[] = [];
-        this.db.createReadStream()
-          .on('data', function (data) {
-            //console.log(key)
-            let id: string = data.key.split(':')[1]
-            //console.log(data.key)
-            //console.log(id)
-            if( id == key )
-            {
-              let timestamp: string = data.key.split(':')[2]
-              //console.log('data.key.split2 : '+data.key.split(':')[2])
-              let oneMetric: Metric = new Metric(timestamp, data.value)
-              metrics.push(oneMetric)
-            }
-            
-          })
-          .on('error', function (err) {
-            //console.log('Oh my!', err)
-            callback(err, null)
-          })
-          .on('close', function () {
-            //console.log('Stream closed')
-            callback(null, metrics)
-          })
-          .on('end', function () {
-            //console.log('Stream ended')
-          })
-      }
-
-      */
-
-
 
 
     public getActualKey(key: string, callback: (error: Error | null, result: string) => void){
@@ -134,17 +99,6 @@ export class MetricsHandler {
             })
     }
 
-    /*
-    public delete(key: string, callback: (error: Error | null) => void){        
-        let err = this.db.del(key, (err) => {
-            if (err){
-                console.log('Could not delete :(', err)
-                return callback(err)
-            }
-        })
-        callback(err)
-    }
-    */
     
     //Delete user's metric in the database
     
