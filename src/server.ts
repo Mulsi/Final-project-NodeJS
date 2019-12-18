@@ -123,6 +123,7 @@ app.delete(
 */
 
 app.post('/metrics', (req: any, res: any) => {
+    console.log(req.body)
     dbMet.save(req.session.user.username, req.body, (err: Error | null) => {
         if (err) throw err
         res.status(200).send()

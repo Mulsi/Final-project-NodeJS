@@ -31,17 +31,6 @@ export class MetricsHandler {
         stream.end()
     }
 
-    // public save(key: number, metrics: Metric[], callback: (error: Error | null) => void) {
-    //     // Outdated, kept here for reference
-    //     const stream = WriteStream(this.db)
-    //     stream.on('error', callback)
-    //     stream.on('close', callback)
-    //     metrics.forEach((metric: Metric) => {
-    //         stream.write({ key: `metric:${key}:${metric.timestamp}`, value: metric.value })
-    //     })
-    //     console.log(metrics)
-    //     stream.end()
-    //   }
 
 
     public getAll(callback: (error: Error | null, result: Metric[] | null) => void) {
@@ -70,67 +59,6 @@ export class MetricsHandler {
             })
     }
 
-    /*
-    public getAll(key: string, callback: (error: Error | null, result: Metric[] | null) => void) {
-        // Read
-        let metrics: Metric[] = [];
-        this.db.createReadStream()
-          .on('data', function (data) {
-            //console.log(key)
-            let id: string = data.key.split(':')[1]
-            //console.log(data.key)
-            //console.log(id)
-            if( id == key )
-            {
-              let timestamp: string = data.key.split(':')[2]
-              //console.log('data.key.split2 : '+data.key.split(':')[2])
-              let oneMetric: Metric = new Metric(timestamp, data.value)
-              metrics.push(oneMetric)
-            }
-            
-          })
-          .on('error', function (err) {
-            //console.log('Oh my!', err)
-            callback(err, null)
-          })
-          .on('close', function () {
-            //console.log('Stream closed')
-            callback(null, metrics)
-          })
-          .on('end', function () {
-            //console.log('Stream ended')
-          })
-      }
-
-      */
-
-
-
-
-    // public getActualKey(key: string, callback: (error: Error | null, result: string) => void){
-    //     // This method is outdated, belongs to a time before usernames
-    //     let actualKey = "Found no key";
-    //     const stream = this.db.createReadStream()
-    //         .on('data', function (data) {
-    //             console.log(data.key, '=', data.value)
-    //             let keyToCheck: string = data.key.split(':')[1]
-    //             console.log(key === keyToCheck)
-    //             if (key === keyToCheck) {
-    //                 actualKey = data.key;
-    //             };
-    //             console.log(actualKey);
-    //         })
-    //         .on('error', function (err) {
-    //             callback;
-    //         })
-    //         .on('close', function () {
-    //             console.log('Stream closed')
-    //         })
-    //         .on('end', function () {
-    //             console.log('Stream ended')
-    //             callback(null, actualKey);
-    //         })
-    // }
     
     //Delete user's metric in the database
     
