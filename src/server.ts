@@ -123,11 +123,14 @@ app.delete(
 */
 
 app.post('/metrics', (req: any, res: any) => {
-    console.log(req.body)
-    dbMet.save(req.session.user.username, req.body, (err: Error | null) => {
-        if (err) throw err
-        res.status(200).send()
-    })
+    if (req.body.timestamp !== "" && !isNaN(Number(req.body.value)) && !isNaN(Number(req.body.timestamp))){
+        dbMet.save(req.session.user.username, req.body, (err: Error | null) => {
+            if (err) throw err
+            res.redirect("/")
+        })
+    } else{
+        res.redirect("/")
+    }
 })
 
 /* User authentication and creation */
