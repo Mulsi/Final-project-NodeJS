@@ -4,18 +4,25 @@
 <head>
     <% include partials/head %>
 </head>
+
 <body class= conatiner>
-    <h1 className="h1">Hello user</h1>
     <h1>Hello <%= username %></h1>
-</body>    
-    
 
+    <h5>Your metrics : </h5>
+    <div id="metrics"></div>
 
+  
+    <script>
+        /* This part lets us display all of our metrics */
+        $.getJSON("/metrics/<%= username %>", {}, (data) => {
+            const content = data.map(d => {
+                return '<li> timestamp: '+d.timestamp+', value: '+d.value+'</li>';
+            })
+            console.log(typeof content)
+            $('#metrics').append(content.join("\n"));
+        });
+    </script>
 
-
-<body>
-<div id="chartContainer" style="height: 300px; width: 100%;">
-</div>
 
 
     <form action="/convert" method="post">
@@ -24,173 +31,139 @@
         <input type="datetime-local" id="form_timestamp" name="dateTime" value="2019-12-01T00:00" min="1970-01-01T00:00" max="2100-12-31T23:59">
         <p><%= datetime === "" ? "" : datetime %></p>
         </div>
-        <button class="btn btn-primary " type="submit" value="Submit">Convert datetime into timestamp</button>
+        <button class="btn btn-secondary " type="submit" value="Submit">Convert datetime into timestamp</button>
     </form>
 
 
     <br/>
     <form action="/add" method="post">
-    <div class="form-group">
-        <label for="form_timestamp">Timestamp : </label>
-        <input id="form_timestamp" type="number" placeholder="Enter a positif number" name="timestamp" min="0"/>
-        <label for="form_timestamp">, Value: </label>
-        <input id="form_timestamp" type="number" placeholder="Enter a number" name="value" />
-        <button class="btn btn-success " type="submit" value="Submit">Add/update a metric</button>
-    </div>
+        <div class="form-group">
+            <label for="form_timestamp">Timestamp : </label>
+            <input id="form_timestamp" type="number" placeholder="Enter a positif number" name="timestamp" min="0"/>
+            <label for="form_timestamp">, Value: </label>
+            <input id="form_timestamp" type="number" placeholder="Enter a number" name="value" />
+            <button class="btn btn-secondary " type="submit" value="Submit">Add/update a metric</button>
+        </div>
     </form>
 
     <form action="/delete" method="post">
         <div class="form-group">
           <label for="form_timestamp">Timestamp : </label>
           <input id="form_timestamp" type="number" placeholder="Enter a positif number" name="timestamp" min="0"/>
-          <button class="btn btn-success" type="submit" value="Submit">Delete a metric</button>
+          <button class="btn btn-secondary" type="submit" value="Submit">Delete a metric</button>
         </div>
-      </form>
-  
-      <br/>
-      <br/>
-  
-
-
-      <div id="MyChart"></div>
-
-
-    <script>
-        $.getJSON("/metrics/<%= username %>", {}, (data) => {
-          var margin = {top: 10, right: 30, bottom: 50, left: 60},
-          width = 800 - margin.left - margin.right,
-          height = 600 - margin.top - margin.bottom;
-  
-        // append the svg object to the body of the page
-        var svg = d3.select("#MyChart")
-          .append("svg")
-          .attr("width", width + margin.left + margin.right)
-          .attr("height", height + margin.top + margin.bottom)
-          .append("g")
-          .attr("transform",
-              "translate(" + margin.left + "," + margin.top + ")");
-  
-        // Add X axis --> it is a date format
-        var x = d3.scaleTime()
-            .domain(d3.extent(data, function(d) { return d.timestamp; })) //extent find the min & max in data
-            .range([ 0, width ]);
-        svg.append("g")
-            .attr("transform", "translate(0," + height + ")")
-            .call(d3.axisBottom(x));
-  
-        // Add Y axis
-        var y = d3.scaleLinear()
-            .domain([0, d3.max(data, function(d) { return +d.value; })])
-            .range([ height, 0 ]);
-        svg.append("g")
-            .call(d3.axisLeft(y));
-  
-        // Add the line
-        svg.append("path")
-            .datum(data)
-            .attr("fill", "none")
-            .attr("stroke", "steelblue")
-            .attr("stroke-width", 1.5)
-            .attr("d", d3.line()
-            .x(function(d) { return x(d.timestamp) })
-            .y(function(d) { return y(d.value) })
-            )
-  
-        // text label for the x axis
-        svg.append("text")             
-            .attr("transform",
-                "translate(" + (width/2) + " ," + (height + margin.top + 30) + ")")
-            .style("text-anchor", "middle")
-            .text("Date");
-  
-        // text label for the y axis
-        svg.append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("y", 0 - margin.left)
-            .attr("x",0 - (height / 2))
-            .attr("dy", "1em")
-            .style("text-anchor", "middle")
-            .text("Value");  
-  
-        });
-    </script>
-
-
-
-<div class="text-center">
-    <button class="btn btn-secondary" type="submit" id="show-metrics">
-        Get metrics
-    </button>
-    <div id="metrics"></div>
-   
-    <button class="btn btn-secondary" type="submit" id="display-metrics">
-        Update metrics
-    </button>
-    <div id="metrics"></div>
-
-    <button class="btn btn-secondary" type="submit" id="add-metrics">
-        Add metrics
-    </button>
-    <div id="metrics"></div>
-
-    <button class="btn btn-secondary" type="submit">
-        Delete metrics
-    </button>
-    <div id="metrics"></div>
+    </form>
 
     <button class="btn btn-danger" type="submit" href="/logout" onClick='document.location.href="/logout"'>
         Log out
     </button>
-
-    <div id="chartContainer" style="height: 280px; width: 100%;"></div>
-    <button id="button">Update Chart Type</button>
-
-</div>
-
+  
+    <br/>
+    <br/>
 
 
 </body>
-</html>
 
-<script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
-<script src="//www.amcharts.com/lib/3/amcharts.js"></script>
-<script src="//www.amcharts.com/lib/3/serial.js"></script>
-<script src="//www.amcharts.com/lib/3/themes/light.js"></script>
+
+
+<div id="MyChart"></div>
 
 <script>
-    $('#show-metrics').click((e) => {
-    e.preventDefault();
-    $.getJSON("/metrics", {}, (data) => {
-        const content = data.map(d => {
-        return 'timestamp: '+d.timestamp+', value: '+d.value+'';
-        })
-        $('#metrics').append(content.join("\n"));
-        //console.log(content)
-    });
-    })
 
-    $('#add-metrics').click((e) => {
-            let data = {};
-            //Using dummy value for date and value
-            data.timestamp = (+new Date("2015-03-25"));
-            data.value = 10;
-            $.ajax({
-                type: "POST",
-                url: "/metrics",
-                // The key needs to match your method's input parameter (case-sensitive).
-                data: JSON.stringify([data]),
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                success: function (data) {
-                    console.log(data);
-                },
-                failure: function (errMsg) {
-                    alert(errMsg);
-                }
-            })
-        })
+$.getJSON("/metrics/<%= username %>", {}, (data) => {
+      var margin = {top: 10, right: 30, bottom: 50, left: 60},
+      width = 800 - margin.left - margin.right,
+      height = 600 - margin.top - margin.bottom;
+
+    // append the svg object to the body of the page
+    var svg = d3.select("#MyChart")
+      .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+
+    // Add X axis --> it is a date format
+    var x = d3.scaleTime()
+        .domain(d3.extent(data, function(d) { return d.timestamp; })) //extent find the min & max in data
+        .range([ 0, width ]);
+    svg.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x));
+
+    // Add Y axis
+    var y = d3.scaleLinear()
+        .domain([0, d3.max(data, function(d) { return +d.value; })])
+        .range([ height, 0 ]);
+    svg.append("g")
+        .call(d3.axisLeft(y));
+
+    // Add the line
+    svg.append("path")
+        .datum(data)
+        .attr("fill", "none")
+        .attr("stroke", "steelblue")
+        .attr("stroke-width", 1.5)
+        .attr("d", d3.line()
+        .x(function(d) { return x(d.timestamp) })
+        .y(function(d) { return y(d.value) })
+        )
+
+    // text label for the x axis
+    svg.append("text")             
+        .attr("transform",
+            "translate(" + (width/2) + " ," + (height + margin.top + 30) + ")")
+        .style("text-anchor", "middle")
+        .text("Date");
+
+    // text label for the y axis
+    svg.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0 - margin.left)
+        .attr("x",0 - (height / 2))
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .text("Value");  
+
+});
 
 
+    // $('#show-metrics').click((e) => {
+    // e.preventDefault();
+    // $.getJSON("/metrics", {}, (data) => {
+    //     const content = data.map(d => {
+    //     return 'timestamp: '+d.timestamp+', value: '+d.value+'';
+    //     })
+    //     $('#metrics').append(content.join("\n"));
+    //     //console.log(content)
+    // });
+    // })
+
+
+    // $('#add-metrics').click((e) => {
+    //         let data = {};
+    //         //Using dummy value for date and value
+    //         data.timestamp = (+new Date("2015-03-25"));
+    //         data.value = 10;
+    //         $.ajax({
+    //             type: "POST",
+    //             url: "/metrics",
+    //             // The key needs to match your method's input parameter (case-sensitive).
+    //             data: JSON.stringify([data]),
+    //             contentType: "application/json; charset=utf-8",
+    //             dataType: "json",
+    //             success: function (data) {
+    //                 console.log(data);
+    //             },
+    //             failure: function (errMsg) {
+    //                 alert(errMsg);
+    //             }
+    //         })
+    //     })
+
+
+    /*
     $('#display-metrics').click((e) => {
     
     /*
@@ -245,23 +218,18 @@
         }});
         */
       //}})
-    });
-
-  </script>
-
-
+    //});
     
-    <script>
-        /* This part lets us display all of our metrics */
-        $.getJSON("/metrics", {}, (data) => {
-        const content = data.map(d => {
-            return '<li> timestamp: '+d.timestamp+', value: '+d.value+'</li>';
-        })
-        console.log(typeof content)
-        $('#metrics').append(content.join("\n"));
-        });
-    </script>
+
+</script>
+</html>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script> 
+
+
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script> 
 <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<script src="//www.amcharts.com/lib/3/amcharts.js"></script>
+<script src="//www.amcharts.com/lib/3/serial.js"></script>
+<script src="//www.amcharts.com/lib/3/themes/light.js"></script> -->

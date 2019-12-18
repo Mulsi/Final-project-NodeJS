@@ -1,5 +1,5 @@
 import express = require('express')
-import { MetricsHandler } from './metrics'
+import { Metric, MetricsHandler } from './metrics'
 import path = require('path')
 import bodyparser = require('body-parser')
 import session = require('express-session')
@@ -25,6 +25,8 @@ app.use(session({
     saveUninitialized: true
 }))
 
+
+
 app.use('/user', userRouter)
 app.use(express.static(path.join(__dirname, '/public')))
 app.use(bodyparser.json())
@@ -34,6 +36,8 @@ app.set('view engine', 'ejs');
 
 /* Metrics */
 
+
+/* Old one */
 // app.get('/', (req: any, res: any) => {
 //   res.write('Hello world')
 //   res.end()
@@ -46,6 +50,9 @@ app.get(
         res.render('index.ejs', {name: req.params.name})
     })
 
+
+/* Old one as well */
+/*
 app.get(
     '/metrics',
     (req: any, res: any) => {
@@ -55,7 +62,40 @@ app.get(
         })
     }
 )
+*/
 
+
+//Get user's metrics (don't need to be connected)
+app.get('/metrics/:id', (req: any, res: any) => {
+    dbMet.getAll(
+      req.params.id, (err: Error | null, metrics: Metric[] | null) => {
+      if (err) throw err
+      if (metrics !== null) {
+        let DATA : object[]= []
+        metrics.sort(function(a : Metric, b : Metric) { //Sort timestamp in the object "metrics" 
+          if (Number(a.timestamp) > Number(b.timestamp)) {
+            return 1;
+          }
+          if (Number(a.timestamp) < Number(b.timestamp)) {
+            return -1;
+          }
+          return 0;
+        });
+        metrics.forEach((data)=> {
+          DATA.push({timestamp :Number(data.timestamp), value : Number(data.value)})
+        })
+        if (DATA.length == 0) res.status(404).render('error.ejs', {})
+        else res.status(200).send(DATA)
+      }
+      
+    })
+  })
+
+
+
+/* Dont think we need this part as well */
+
+/*
 app.get(
     '/metrics/:id',
     (req: any, res: any) => {
@@ -65,7 +105,6 @@ app.get(
         })
     }
 )
-
 
 
 
@@ -82,6 +121,7 @@ app.delete(
 
     }
 )
+*/
 
 
 app.post('/metrics/:id', (req: any, res: any) => {
@@ -130,6 +170,15 @@ authRouter.get('/logout', (req: any, res: any) => {
 })
 
 
+//delete a user's metric
+authRouter.post('/delete', (req: any, res: any, next: any) => {
+    if (!isNaN(Number(req.body.timestamp)) && req.body.timestamp !=="") {
+      dbMet.delete(req.session.user.username, req.body.timestamp)
+      res.redirect('/')
+    }
+  })
+
+
 //Add a new metric in user's database
 authRouter.post('/add', (req: any, res: any, next: any) => {
     if (req.body.timestamp !=="" && req.body.value !=="" && !isNaN(Number(req.body.value)) && !isNaN(Number(req.body.timestamp))) {
@@ -139,7 +188,7 @@ authRouter.post('/add', (req: any, res: any, next: any) => {
   })
 
 
-//Convert datetime into timestamp
+//Datetime into timestamp
 authRouter.post('/convert', (req: any, res: any, next: any) => {
     var time : string = String(new Date(req.body.dateTime).getTime())
     var Datetime : string = "The timestamp of "+req.body.dateTime+" is : "+time+""

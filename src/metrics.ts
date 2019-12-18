@@ -47,10 +47,11 @@ export class MetricsHandler {
     //   }
 
 
-    public getAll(callback: (error: Error | null, result: any) => void) {
+    public getAll(key: string, callback: (error: Error | null, result: Metric[] | null) => void) {
         let metrics: Metric[] = []
         const stream = this.db.createReadStream()
             .on('data', function (data) {
+                //let id: string = data.key.split(':')[1]
                 console.log(data.key, '=', data.value)
                 let dataElements = data.key.split(':');
                 let username: string = dataElements[1];
@@ -59,9 +60,10 @@ export class MetricsHandler {
                 metrics.push(metric)
             })
             .on('error', function (err) {
-                callback;
+                callback(err, null);
             })
             .on('close', function () {
+                callback(null, metrics)
                 console.log('Stream closed')
             })
             .on('end', function () {
@@ -69,6 +71,42 @@ export class MetricsHandler {
                 console.log('Stream ended')
             })
     }
+
+    /*
+    public getAll(key: string, callback: (error: Error | null, result: Metric[] | null) => void) {
+        // Read
+        let metrics: Metric[] = [];
+        this.db.createReadStream()
+          .on('data', function (data) {
+            //console.log(key)
+            let id: string = data.key.split(':')[1]
+            //console.log(data.key)
+            //console.log(id)
+            if( id == key )
+            {
+              let timestamp: string = data.key.split(':')[2]
+              //console.log('data.key.split2 : '+data.key.split(':')[2])
+              let oneMetric: Metric = new Metric(timestamp, data.value)
+              metrics.push(oneMetric)
+            }
+            
+          })
+          .on('error', function (err) {
+            //console.log('Oh my!', err)
+            callback(err, null)
+          })
+          .on('close', function () {
+            //console.log('Stream closed')
+            callback(null, metrics)
+          })
+          .on('end', function () {
+            //console.log('Stream ended')
+          })
+      }
+
+      */
+
+
 
 
     public getActualKey(key: string, callback: (error: Error | null, result: string) => void){
@@ -96,6 +134,7 @@ export class MetricsHandler {
             })
     }
 
+    /*
     public delete(key: string, callback: (error: Error | null) => void){        
         let err = this.db.del(key, (err) => {
             if (err){
@@ -105,6 +144,15 @@ export class MetricsHandler {
         })
         callback(err)
     }
+    */
+    
+    //Delete user's metric in the database
+    
+    public delete(username: string, timestamp: string) {
+    let key : string = "metric:"+username+":"+timestamp+""
+    this.db.del(key, (err)=>null)
+    }
+    
 
      //Add a new metric in user's database
     public add(username : string, timestamp: string, value : string) {
@@ -113,6 +161,9 @@ export class MetricsHandler {
         this.db.put(key,Value, (err)=>null)
     }
 
+
+
+    // Do we need getOne?
     public getOne(key: string, callback: (error: Error | null, result: Metric) => void){
         let returnMetric: Metric;
         const stream = this.db.createReadStream()
