@@ -67,8 +67,7 @@ app.get(
 
 //Get user's metrics (don't need to be connected)
 app.get('/metrics/:id', (req: any, res: any) => {
-    dbMet.getAll(
-      req.params.id, (err: Error | null, metrics: Metric[] | null) => {
+    dbMet.getWithUser(req.session.user.username, (err: Error | null, metrics: Metric[] | null) => {
       if (err) throw err
       if (metrics !== null) {
         let DATA : object[]= []
@@ -133,6 +132,7 @@ app.post('/metrics/:id', (req: any, res: any) => {
 })
 
 app.post('/metrics', (req: any, res: any) => {
+    console.log(req.body)
     dbMet.save(req.session.user.username, req.body, (err: Error | null) => {
         if (err) throw err
         res.status(200).send(req.params.id)

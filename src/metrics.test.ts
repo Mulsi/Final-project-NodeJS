@@ -18,7 +18,7 @@ describe('Metrics', function () {
     describe('#get', function () {
     
         it('should get empty array on non existing group', function () {
-            dbMet.getOne("0", function (err: Error | null, result: Metric) {
+            dbMet.getAll("0", function (err: Error | null, result: Metric) {
                 expect(err).to.be.null
                 expect(result).to.not.be.undefined
                 expect(result).to.be.empty
