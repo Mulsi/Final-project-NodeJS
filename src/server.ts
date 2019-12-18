@@ -66,7 +66,8 @@ app.get(
 
 
 //Get user's metrics (don't need to be connected)
-app.get('/metrics/:id', (req: any, res: any) => {
+app.get('/metrics', (req: any, res: any) => {
+    console.log(req.session.user.username)
     dbMet.getWithUser(req.session.user.username, (err: Error | null, metrics: Metric[] | null) => {
       if (err) throw err
       if (metrics !== null) {
@@ -123,6 +124,7 @@ app.delete(
 */
 
 app.post('/metrics', (req: any, res: any) => {
+    console.log(req.body)
     if (req.body.timestamp !== "" && !isNaN(Number(req.body.value)) && !isNaN(Number(req.body.timestamp))){
         dbMet.save(req.session.user.username, req.body, (err: Error | null) => {
             if (err) throw err
