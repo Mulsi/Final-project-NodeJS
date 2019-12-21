@@ -11,17 +11,27 @@
     <h5>Your metrics : </h5>
     <div id="metrics"></div>
 
-  
-    <script>
-        /* This part lets us display all of our metrics */
-        $.getJSON("/metrics", {}, (data) => {
-            const content = data.map(d => {
-                return '<li> timestamp: '+d.timestamp+', value: '+d.value+'</li>';
-            })
-            console.log(typeof content)
-            $('#metrics').append(content.join("\n"));
-        });
-    </script>
+    <ul>
+        <script>
+           function getTime(){
+               /* This part lets us display all of our metrics */
+            //    $.getJSON("/metrics", (data) => {
+            //        console.log("This runs")
+            //        const content = data.map(d => {
+            //            return '<li> timestamp: ' + d.timestamp + ', value: ' + d.value + '</li>';
+            //        })
+            //        console.log(typeof content)
+            //        $('#metrics').append(content.join("\n"));
+            //    });
+                console.log("Run gettime");
+                $.get("/metrics", {}, function (data, status) {
+                   console.log("Data: " + data + "\nStatus: " + status);
+               });
+           }
+           getTime();
+
+        </script>
+    </ul>
 
 
 
@@ -68,7 +78,7 @@
 
 <script>
 
-$.getJSON("/metrics/<%= username %>", {}, (data) => {
+$.getJSON("/metrics", (data) => {
       var margin = {top: 10, right: 30, bottom: 50, left: 60},
       width = 800 - margin.left - margin.right,
       height = 600 - margin.top - margin.bottom;
@@ -223,12 +233,9 @@ $.getJSON("/metrics/<%= username %>", {}, (data) => {
 </body>
 </html>
 
-
-
-
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
 <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 <script src="//www.amcharts.com/lib/3/amcharts.js"></script>
 <script src="//www.amcharts.com/lib/3/serial.js"></script>
-<script src="//www.amcharts.com/lib/3/themes/light.js"></script> -->
+<script src="//www.amcharts.com/lib/3/themes/light.js"></script>

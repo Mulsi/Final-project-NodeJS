@@ -67,7 +67,7 @@ app.get(
 
 //Get user's metrics (don't need to be connected)
 app.get('/metrics', (req: any, res: any) => {
-    console.log(req.session.user.username)
+    console.log("Username: ", req.session.user.username)
     dbMet.getWithUser(req.session.user.username, (err: Error | null, metrics: Metric[] | null) => {
       if (err) throw err
       if (metrics !== null) {
