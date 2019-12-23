@@ -20,7 +20,6 @@ export class MetricsHandler {
     public db: any
 
     constructor(dbPath: string) {
-        console.log("Blopp");
         this.db = LevelDB.open(dbPath)
     }
 

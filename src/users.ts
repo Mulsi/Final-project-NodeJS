@@ -7,7 +7,6 @@ export class UserHandler {
     public db: any
 
     constructor(path: string) {
-        console.log("Blipp");
         this.db = LevelDB.open(path)
     }
     
