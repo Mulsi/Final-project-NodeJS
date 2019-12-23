@@ -3,7 +3,7 @@ import { Metric, MetricsHandler } from './metrics'
 import { LevelDB } from "./leveldb"
 import { test } from 'mocha'
 
-const dbPath: string = 'db_test'
+const dbPath: string = 'db_test/metrics'
 let dbMet: MetricsHandler
 let testMetric: Metric 
 let testUsername: string = "testuser"

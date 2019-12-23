@@ -1,10 +1,9 @@
 import { expect } from 'chai'
-import { Metric, MetricsHandler } from './metrics'
 import { User, UserHandler } from './users'
 import { LevelDB } from "./leveldb"
 import { test } from 'mocha'
 
-const dbPath: string = 'db_test'
+const dbPath: string = 'db_test/users'
 let dbUser: UserHandler
 let properUser: User
 const email = "test@test.com"
@@ -16,7 +15,6 @@ describe('Users', function () {
         LevelDB.clear(dbPath);
         dbUser = new UserHandler(dbPath);
         properUser = new User(properName, email, password);
-
     })
 
     describe('#Basic User Functions', function () {
@@ -38,7 +36,21 @@ describe('Users', function () {
     })
 
     describe("#Save user to database", function() {
-        it("should save ")
+        it("should save user to database, then retreive the same user", () => {
+            dbUser.save(properUser, (err: Error | null) => {
+                expect(err).is.undefined;
+                dbUser.get(properUser.username, (err: Error | null, result?: User) => {
+                    expect(err).is.null;
+                    expect(result).is.not.undefined;
+                    if (result != undefined){
+                        expect(result.username).is.equal(properUser.username);
+                        expect(result.email).is.equal(properUser.email);
+                        expect(result.getPassword()).is.equal(properUser.getPassword());
+                        expect(result.validatePassword(password)).is.true;
+                    }
+                })
+            })
+        })
     });
 
     after(function () {

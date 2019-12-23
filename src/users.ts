@@ -24,14 +24,14 @@ export class UserHandler {
     public save(user: User, callback: (err: Error | null) => void) {
         // Takes a user, then adds user to database with username as key, then "password":"email" as value
         this.db.put(`user:${user.username}`, `${user.getPassword()}:${user.email}`, (err: Error | null) => {
-            callback(err)
+            if (err) {callback(err)};
         })
     }
 
     public delete(username: string, callback: (err: Error | null) => void) {
         // Takes a username, and deletes user corresponding to the username from database
         this.db.delete(`user:${username}`, (err: Error | null) => {
-            callback(err);
+            if (err) callback(err);
         })
     }
 
