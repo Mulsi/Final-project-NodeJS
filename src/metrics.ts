@@ -23,12 +23,22 @@ export class MetricsHandler {
         this.db = LevelDB.open(dbPath)
     }
 
-    public save(username: string, metric: any, callback: (error: Error | null) => void) {
-        const stream = WriteStream(this.db)
-        stream.on('error', callback)
-        stream.on('close', callback)
-        stream.write({ key: `metric:${username}:${metric.timestamp}`, value: metric.value })
-        stream.end()
+    public save(username: string, metric: Metric, callback: (error: Error | null) => void) {
+        if (!metric || metric.timestamp === undefined || metric.value === undefined){
+            callback(new Error("Invalid input object"));
+        }
+        else if (!username) {callback(new Error("No input username"))}
+        else{
+            const stream = WriteStream(this.db)
+            stream.on('error', function (err) {
+                callback(err);
+            });
+            stream.on('close', function () {
+                callback(null);
+            })
+            stream.write({ key: `metric:${username}:${metric.timestamp}`, value: metric.value })
+            stream.end()
+        }
     }
 
 
@@ -51,11 +61,9 @@ export class MetricsHandler {
             })
             .on('close', function () {
                 callback(null, metrics)
-                console.log('Stream closed')
             })
             .on('end', function () {
                 callback(null, metrics)
-                console.log('Stream ended')
             })
     }
 
@@ -66,39 +74,7 @@ export class MetricsHandler {
     let key : string = "metric:"+username+":"+timestamp+""
     this.db.del(key, (err)=>null)
     }
-    
 
-     //Add a new metric in user's database
-    public add(username : string, timestamp: string, value : string) {
-        let key : string = "metric:"+username+":"+timestamp+""
-        let Value : string = value
-        this.db.put(key,Value, (err)=>null)
-    }
-
-
-
-    // Do we need getOne? Archived in case of later use
-    // public getOne(key: string, callback: (error: Error | null, result: Metric) => void){
-    //     let returnMetric: Metric;
-    //     const stream = this.db.createReadStream()
-    //         .on('data', function (data) {
-    //             let keyToCheck: string = data.key.split(':')[1]
-    //             if (key === keyToCheck){
-    //                 returnMetric = new Metric(data.key.split(':')[1], data.key.split(':')[2], data.value);
-    //             };
-    //         })
-    //         .on('error', function (err) {
-    //             callback;
-    //         })
-    //         .on('close', function () {
-    //             console.log('Stream closed')
-    //         })
-    //         .on('end', function () {
-    //             callback(null, returnMetric)
-    //             console.log(returnMetric)
-    //             console.log('Stream ended')
-    //         })
-    // }
 
     public getWithUser(username: any, callback: (error: Error | null, result: any | null) => void) {
         let metrics: Metric[] = []
@@ -117,11 +93,9 @@ export class MetricsHandler {
                 callback(err, null);
             })
             .on('close', function () {
-                console.log('Stream closed')
             })
             .on('end', function () {
                 callback(null, metrics);
-                console.log('Stream ended')
             })
     }    
 }
