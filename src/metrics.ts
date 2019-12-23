@@ -20,6 +20,7 @@ export class MetricsHandler {
     public db: any
 
     constructor(dbPath: string) {
+        console.log("Blopp");
         this.db = LevelDB.open(dbPath)
     }
 
@@ -27,17 +28,19 @@ export class MetricsHandler {
         if (!metric || metric.timestamp === undefined || metric.value === undefined){
             callback(new Error("Invalid input object"));
         }
-        else if (!username) {callback(new Error("No input username"))}
+        else if (!username) { callback(new Error("No input username"))}
         else{
             const stream = WriteStream(this.db)
             stream.on('error', function (err) {
-                callback(err);
-            });
+                console.log(err)
+                if (err) callback(err);
+                else callback(null);
+            })
             stream.on('close', function () {
                 callback(null);
             })
-            stream.write({ key: `metric:${username}:${metric.timestamp}`, value: metric.value })
-            stream.end()
+            stream.write({ key: `metric:${username}:${metric.timestamp}`, value: metric.value });
+            stream.end();
         }
     }
 

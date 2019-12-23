@@ -7,6 +7,7 @@ export class UserHandler {
     public db: any
 
     constructor(path: string) {
+        console.log("Blipp");
         this.db = LevelDB.open(path)
     }
     
@@ -24,14 +25,16 @@ export class UserHandler {
     public save(user: User, callback: (err: Error | null) => void) {
         // Takes a user, then adds user to database with username as key, then "password":"email" as value
         this.db.put(`user:${user.username}`, `${user.getPassword()}:${user.email}`, (err: Error | null) => {
-            if (err) {callback(err)};
+            if (err) callback(err);
+            else callback(null);
         })
     }
 
     public delete(username: string, callback: (err: Error | null) => void) {
         // Takes a username, and deletes user corresponding to the username from database
-        this.db.delete(`user:${username}`, (err: Error | null) => {
+        this.db.del(`user:${username}`, (err: Error | null) => {
             if (err) callback(err);
+            else callback(null);
         })
     }
 

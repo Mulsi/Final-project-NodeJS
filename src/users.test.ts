@@ -38,11 +38,11 @@ describe('Users', function () {
     describe("#Save user to database", function() {
         it("should save user to database, then retreive the same user", () => {
             dbUser.save(properUser, (err: Error | null) => {
-                expect(err).is.undefined;
+                expect(err).is.null;
                 dbUser.get(properUser.username, (err: Error | null, result?: User) => {
                     expect(err).is.null;
                     expect(result).is.not.undefined;
-                    if (result != undefined){
+                    if (result !== undefined){
                         expect(result.username).is.equal(properUser.username);
                         expect(result.email).is.equal(properUser.email);
                         expect(result.getPassword()).is.equal(properUser.getPassword());
@@ -53,7 +53,22 @@ describe('Users', function () {
         })
     });
 
+    describe("#Delete user from database", function () {
+        it("should delete user from database", () => {
+            dbUser.save(properUser, (err: Error | null) => {
+                expect(err).is.null;
+                dbUser.delete(properUser.username, (err: Error | null) => {
+                    expect(err).is.null;
+                    dbUser.get(properUser.username, (err: Error | null, result?: User) => {
+                        expect(err).is.not.null;
+                        expect(err).is.not.undefined;
+                    })
+                })
+            })
+        })
+    });
+
     after(function () {
         dbUser.db.close()
-    })
+    });
 })
