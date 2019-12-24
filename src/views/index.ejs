@@ -11,29 +11,79 @@
     <h5>Your metrics : </h5>
     <div id="metrics"></div>
 
-    <ul>
+    <form action="/metrics">
+        <button>Get</button>
         <script>
-           function getTime(){
-               /* This part lets us display all of our metrics */
-            //    $.getJSON("/metrics", (data) => {
-            //        console.log("This runs")
-            //        const content = data.map(d => {
-            //            return '<li> timestamp: ' + d.timestamp + ', value: ' + d.value + '</li>';
-            //        })
-            //        console.log(typeof content)
-            //        $('#metrics').append(content.join("\n"));
-            //    });
-                console.log("Run gettime");
-                $.get("/metrics", {}, function (data, status) {
-                   console.log("Data: " + data + "\nStatus: " + status);
-               });
-           }
-           getTime();
+            $("form").submit(function (e) {
+                e.preventDefault();
+                $.ajax({
+                    url: "/metrics",
+                    data: {},
+                    type: "GET", // if you want to send data via the "data" property change this to "POST". This can be omitted otherwise
+                    success: function (responseData) {
+                        console.log(responseData);
+                        console.log("Anything")
 
+                        var margin = { top: 10, right: 30, bottom: 50, left: 60 },
+                            width = 800 - margin.left - margin.right,
+                            height = 600 - margin.top - margin.bottom;
+
+                        // append the svg object to the body of the page
+                        var svg = d3.select("#MyChart")
+                            .append("svg")
+                            .attr("width", width + margin.left + margin.right)
+                            .attr("height", height + margin.top + margin.bottom)
+                            .append("g")
+                            .attr("transform",
+                                "translate(" + margin.left + "," + margin.top + ")");
+
+                        // Add X axis --> it is a date format
+                        var x = d3.scaleTime()
+                            .domain(d3.extent(responseData, function (d) { return d.timestamp; })) //extent find the min & max in data
+                            .range([0, width]);
+                        svg.append("g")
+                            .attr("transform", "translate(0," + height + ")")
+                            .call(d3.axisBottom(x));
+
+                        // Add Y axis
+                        var y = d3.scaleLinear()
+                            .domain([0, d3.max(responseData, function (d) { return +d.value; })])
+                            .range([height, 0]);
+                        svg.append("g")
+                            .call(d3.axisLeft(y));
+
+                        // Add the line
+                        svg.append("path")
+                            .datum(responseData)
+                            .attr("fill", "none")
+                            .attr("stroke", "steelblue")
+                            .attr("stroke-width", 1.5)
+                            .attr("d", d3.line()
+                                .x(function (d) { return x(d.timestamp) })
+                                .y(function (d) { return y(d.value) })
+                            )
+
+                        // text label for the x axis
+                        svg.append("text")
+                            .attr("transform",
+                                "translate(" + (width / 2) + " ," + (height + margin.top + 30) + ")")
+                            .style("text-anchor", "middle")
+                            .text("Date");
+
+                        // text label for the y axis
+                        svg.append("text")
+                            .attr("transform", "rotate(-90)")
+                            .attr("y", 0 - margin.left)
+                            .attr("x", 0 - (height / 2))
+                            .attr("dy", "1em")
+                            .style("text-anchor", "middle")
+                            .text("Value");
+                    },
+                    error: console.error
+                });
+            });
         </script>
-    </ul>
-
-
+    </form>
 
     <form action="/convert" method="post">
         <div class="form-group">
@@ -76,65 +126,66 @@
 
 <div id="MyChart"></div>
 
+
 <script>
 
-$.getJSON("/metrics", (data) => {
-      var margin = {top: 10, right: 30, bottom: 50, left: 60},
-      width = 800 - margin.left - margin.right,
-      height = 600 - margin.top - margin.bottom;
+// $.getJSON("/metrics", (data) => {
+//       var margin = {top: 10, right: 30, bottom: 50, left: 60},
+//       width = 800 - margin.left - margin.right,
+//       height = 600 - margin.top - margin.bottom;
 
-    // append the svg object to the body of the page
-    var svg = d3.select("#MyChart")
-      .append("svg")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
-      .append("g")
-      .attr("transform",
-          "translate(" + margin.left + "," + margin.top + ")");
+//     // append the svg object to the body of the page
+//     var svg = d3.select("#MyChart")
+//       .append("svg")
+//       .attr("width", width + margin.left + margin.right)
+//       .attr("height", height + margin.top + margin.bottom)
+//       .append("g")
+//       .attr("transform",
+//           "translate(" + margin.left + "," + margin.top + ")");
 
-    // Add X axis --> it is a date format
-    var x = d3.scaleTime()
-        .domain(d3.extent(data, function(d) { return d.timestamp; })) //extent find the min & max in data
-        .range([ 0, width ]);
-    svg.append("g")
-        .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x));
+//     // Add X axis --> it is a date format
+//     var x = d3.scaleTime()
+//         .domain(d3.extent(data, function(d) { return d.timestamp; })) //extent find the min & max in data
+//         .range([ 0, width ]);
+//     svg.append("g")
+//         .attr("transform", "translate(0," + height + ")")
+//         .call(d3.axisBottom(x));
 
-    // Add Y axis
-    var y = d3.scaleLinear()
-        .domain([0, d3.max(data, function(d) { return +d.value; })])
-        .range([ height, 0 ]);
-    svg.append("g")
-        .call(d3.axisLeft(y));
+//     // Add Y axis
+//     var y = d3.scaleLinear()
+//         .domain([0, d3.max(data, function(d) { return +d.value; })])
+//         .range([ height, 0 ]);
+//     svg.append("g")
+//         .call(d3.axisLeft(y));
 
-    // Add the line
-    svg.append("path")
-        .datum(data)
-        .attr("fill", "none")
-        .attr("stroke", "steelblue")
-        .attr("stroke-width", 1.5)
-        .attr("d", d3.line()
-        .x(function(d) { return x(d.timestamp) })
-        .y(function(d) { return y(d.value) })
-        )
+//     // Add the line
+//     svg.append("path")
+//         .datum(data)
+//         .attr("fill", "none")
+//         .attr("stroke", "steelblue")
+//         .attr("stroke-width", 1.5)
+//         .attr("d", d3.line()
+//         .x(function(d) { return x(d.timestamp) })
+//         .y(function(d) { return y(d.value) })
+//         )
 
-    // text label for the x axis
-    svg.append("text")             
-        .attr("transform",
-            "translate(" + (width/2) + " ," + (height + margin.top + 30) + ")")
-        .style("text-anchor", "middle")
-        .text("Date");
+//     // text label for the x axis
+//     svg.append("text")             
+//         .attr("transform",
+//             "translate(" + (width/2) + " ," + (height + margin.top + 30) + ")")
+//         .style("text-anchor", "middle")
+//         .text("Date");
 
-    // text label for the y axis
-    svg.append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("y", 0 - margin.left)
-        .attr("x",0 - (height / 2))
-        .attr("dy", "1em")
-        .style("text-anchor", "middle")
-        .text("Value");  
+//     // text label for the y axis
+//     svg.append("text")
+//         .attr("transform", "rotate(-90)")
+//         .attr("y", 0 - margin.left)
+//         .attr("x",0 - (height / 2))
+//         .attr("dy", "1em")
+//         .style("text-anchor", "middle")
+//         .text("Value");  
 
-});
+// });
 
 
     // $('#show-metrics').click((e) => {
@@ -232,6 +283,9 @@ $.getJSON("/metrics", (data) => {
 </script>
 </body>
 </html>
+
+
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
 <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
