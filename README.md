@@ -12,12 +12,12 @@ Then paste the link below to access the website:
 - We already pre-populated two users with their metrics (user info down below), or create a new user by following simple intstructions on the website
 
 ##### First pre-populated user
-username: Miha
-password: 123
+username: Miha,
+password: 123,
 email: miha@gmail.com
 ##### Second pre-populated user
-username: Eirik
-password: 123
+username: Eirik,
+password: 123,
 email: eirik@gmail.com
 
 - Login with the choosen user
