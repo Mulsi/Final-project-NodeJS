@@ -70,13 +70,14 @@ export class MetricsHandler {
     }
 
     
-    //Delete user's metric in the database
+    
     
     public delete(username: string, timestamp: string) {
         let key : string = "metric:"+username+":"+timestamp+""
         this.db.del(key, (err)=>null)
     }
 
+    //Delete user's metric in the database
     public deleteAllByUser(username: string) {
         this.getWithUser(username, (error: Error | null, result: any | null) => {
             if (result) {

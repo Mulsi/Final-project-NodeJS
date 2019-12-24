@@ -34,35 +34,17 @@ app.use(bodyparser.urlencoded({extended: true}))
 app.set('views', __dirname + "/views")
 app.set('view engine', 'ejs');
 
+
+
+
+
 /* Metrics */
-
-
-/* Old one */
-// app.get('/', (req: any, res: any) => {
-//   res.write('Hello world')
-//   res.end()
-// })
-
-
 app.get(
     '/hello/:name',
     (req: any, res: any) => {
         res.render('index.ejs', {name: req.params.name})
     })
 
-
-/* Old one as well */
-/*
-app.get(
-    '/metrics',
-    (req: any, res: any) => {
-        dbMet.getAll((err: Error | null, result: any) => {
-            if (err) throw err
-            res.status(200).send(result)
-        })
-    }
-)
-*/
 
 
 //Get user's metrics (don't need to be connected)
@@ -93,36 +75,6 @@ app.get('/metrics', (req: any, res: any) => {
 
 
 
-/* Dont think we need this part as well */
-
-/*
-app.get(
-    '/metrics/:id',
-    (req: any, res: any) => {
-        dbMet.getOne(req.params.id, (err: Error | null, result: any) => {
-            if (err) throw err
-            res.status(200).send(result)
-        })
-    }
-)
-
-
-
-app.delete(
-    '/metrics/:id',
-    (req: any, res: any) => {
-        dbMet.getActualKey(req.params.id, (err: Error | null, result: string) => {
-            if (err) throw err
-            dbMet.delete(result, (err: Error | null) => {
-                if (err) throw err
-                res.status(200).send('Deleted: ' + result)
-            })
-        })
-
-    }
-)
-*/
-
 app.post('/metrics', (req: any, res: any) => {
     console.log(req.body)
     if (req.body.timestamp !== "" && !isNaN(Number(req.body.value)) && !isNaN(Number(req.body.timestamp))){
@@ -135,17 +87,14 @@ app.post('/metrics', (req: any, res: any) => {
     }
 })
 
+
+
 /* User authentication and creation */
 app.use(authRouter)
 
 authRouter.get('/login', (req: any, res: any) => {
     res.render('login', false)
 })
-
-// authRouter.get('/login/:error', (req: any, res: any) => {
-//     //Alternative render method for giving input to login form    
-//     res.render('login', req.params.error)
-// })
 
 authRouter.get('/signup', (req: any, res: any) => {
     res.render('signup')
@@ -163,6 +112,7 @@ authRouter.get('/logout', (req: any, res: any) => {
     delete req.session.user;
     res.redirect('/login')
 })
+
 
 
 //delete a user's metric
@@ -274,7 +224,7 @@ userRouter.get('/:username', (req: any, res: any, next: any) => {
 
 
 
-// }) // <= Dont know why this is here, but am scared of removing it
+
 
 const authCheck = function (req: any, res: any, next: any) {
     if (req.session.loggedIn) {
