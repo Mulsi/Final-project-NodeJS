@@ -12,7 +12,12 @@
     <div id="metrics"></div>
 
     <form action="/metrics">
-        <button>Get</button>
+
+
+        <div class="form-group">
+        <button class="btn btn-success">View metrics</button>
+        </div>
+
         <script>
             $("form").submit(function (e) {
                 e.preventDefault();
@@ -85,10 +90,14 @@
         </script>
     </form>
 
+    <form>
+        <h5>Choose a timestamp to add a new metric: </h5>
+    </form>
+
     <form action="/convert" method="post">
         <div class="form-group">
         <label for="form_datetime">Datetime : </label>
-        <input type="datetime-local" id="form_timestamp" name="dateTime" value="2019-12-01T00:00" min="1970-01-01T00:00" max="2100-12-31T23:59">
+        <input type="datetime-local" id="form_timestamp" name="dateTime" value="2019-12-24T00:00" min="1970-01-01T00:00" max="2100-12-31T23:59">
         <p><%= datetime === "" ? "" : datetime %></p>
         </div>
         <button class="btn btn-secondary " type="submit" value="Submit">Convert datetime into timestamp</button>
@@ -127,160 +136,6 @@
 <div id="MyChart"></div>
 
 
-<script>
-
-// $.getJSON("/metrics", (data) => {
-//       var margin = {top: 10, right: 30, bottom: 50, left: 60},
-//       width = 800 - margin.left - margin.right,
-//       height = 600 - margin.top - margin.bottom;
-
-//     // append the svg object to the body of the page
-//     var svg = d3.select("#MyChart")
-//       .append("svg")
-//       .attr("width", width + margin.left + margin.right)
-//       .attr("height", height + margin.top + margin.bottom)
-//       .append("g")
-//       .attr("transform",
-//           "translate(" + margin.left + "," + margin.top + ")");
-
-//     // Add X axis --> it is a date format
-//     var x = d3.scaleTime()
-//         .domain(d3.extent(data, function(d) { return d.timestamp; })) //extent find the min & max in data
-//         .range([ 0, width ]);
-//     svg.append("g")
-//         .attr("transform", "translate(0," + height + ")")
-//         .call(d3.axisBottom(x));
-
-//     // Add Y axis
-//     var y = d3.scaleLinear()
-//         .domain([0, d3.max(data, function(d) { return +d.value; })])
-//         .range([ height, 0 ]);
-//     svg.append("g")
-//         .call(d3.axisLeft(y));
-
-//     // Add the line
-//     svg.append("path")
-//         .datum(data)
-//         .attr("fill", "none")
-//         .attr("stroke", "steelblue")
-//         .attr("stroke-width", 1.5)
-//         .attr("d", d3.line()
-//         .x(function(d) { return x(d.timestamp) })
-//         .y(function(d) { return y(d.value) })
-//         )
-
-//     // text label for the x axis
-//     svg.append("text")             
-//         .attr("transform",
-//             "translate(" + (width/2) + " ," + (height + margin.top + 30) + ")")
-//         .style("text-anchor", "middle")
-//         .text("Date");
-
-//     // text label for the y axis
-//     svg.append("text")
-//         .attr("transform", "rotate(-90)")
-//         .attr("y", 0 - margin.left)
-//         .attr("x",0 - (height / 2))
-//         .attr("dy", "1em")
-//         .style("text-anchor", "middle")
-//         .text("Value");  
-
-// });
-
-
-    // $('#show-metrics').click((e) => {
-    // e.preventDefault();
-    // $.getJSON("/metrics", {}, (data) => {
-    //     const content = data.map(d => {
-    //     return 'timestamp: '+d.timestamp+', value: '+d.value+'';
-    //     })
-    //     $('#metrics').append(content.join("\n"));
-    //     //console.log(content)
-    // });
-    // })
-
-
-    // $('#add-metrics').click((e) => {
-    //         let data = {};
-    //         //Using dummy value for date and value
-    //         data.timestamp = (+new Date("2015-03-25"));
-    //         data.value = 10;
-    //         $.ajax({
-    //             type: "POST",
-    //             url: "/metrics",
-    //             // The key needs to match your method's input parameter (case-sensitive).
-    //             data: JSON.stringify([data]),
-    //             contentType: "application/json; charset=utf-8",
-    //             dataType: "json",
-    //             success: function (data) {
-    //                 console.log(data);
-    //             },
-    //             failure: function (errMsg) {
-    //                 alert(errMsg);
-    //             }
-    //         })
-    //     })
-
-
-    /*
-    $('#display-metrics').click((e) => {
-    
-    /*
-      $.get("/metrics", function (data) {
-      //console.log(data);
-      let timestampValueArr = [];
-      for (let i = 0; i < data.length; i++) {
-        timestampValueArr.push({ "timestamp": parseInt(data[i].timestamp), "value": parseInt(data[i].value) });
-        console.log(timestampValueArr);
-        
-       
-    let data = {};
-        console.log((+new Date(document.getElementById('date-value').value)));
-        data.timestamp = (+new Date(document.getElementById('date-value').value));
-        data.value = $('#metric-value').val();
-        console.log(data);
-        */
-
-        /*
-        $.ajax({
-            dataType : "json",
-            type: 'POST',
-            url: '/metrics/1',
-            data: {},
-            success: function(data)
-            {
-                console.log(data)
-                let timestampValueArr = [];
-                for (let i = 0; i < data.length; i++) {
-                    timestampValueArr.push({ "timestamp": parseInt(data[i].timestamp), "value": parseInt(data[i].value) });
-                    console.log(timestampValueArr);
-
-                    var chart = new CanvasJS.Chart("chartContainer",
-                    {
-
-                        title:{
-                        text: "User chart"
-                        },
-                        data: [
-                        {
-                        type: "line",
-
-                        dataPoints: timestampValueArr
-
-                        }
-                        ]
-                    });
-
-                    chart.render();
-
-            }
-        }});
-        */
-      //}})
-    //});
-    
-
-</script>
 </body>
 </html>
 
