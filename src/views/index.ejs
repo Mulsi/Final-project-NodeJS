@@ -123,11 +123,17 @@
           <button class="btn btn-secondary" type="submit" value="Submit">Delete a metric</button>
         </div>
     </form>
-
+    
+    <form action="/deleteAll" method="post">
+        <button class="btn btn-danger" type="submit" value="Submit" >
+            Delete all metrics    
+        </button>
+    </form>
 
     <button class="btn btn-danger" type="submit" href="/logout" onClick='document.location.href="/logout"'>
         Log out
-    </button>  
+    </button>
+
     <br/>
     <br/>
 

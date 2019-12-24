@@ -173,6 +173,13 @@ authRouter.post('/delete', (req: any, res: any, next: any) => {
     }
   })
 
+//delete all metrics of a user
+authRouter.post('/deleteAll', (req: any, res: any, next: any) => {
+    console.log(req.session.user.username)
+    dbMet.deleteAllByUser(req.session.user.username)
+    res.redirect('/')
+})
+
 
 //Add a new metric in user's database
 authRouter.post('/add', (req: any, res: any, next: any) => {
