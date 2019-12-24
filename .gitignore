@@ -1,6 +1,1 @@
 node_modules/
-db/users/*
-db/metrics/*
-db/sessions/*
-db_test/metrics/*
-db_test/users/*
